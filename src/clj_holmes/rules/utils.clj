@@ -21,7 +21,9 @@
          (map f)
          (filterv identity)
          (mapv (fn [form]
-                (assoc (meta form) :code form))))))
+                 (-> form
+                     meta
+                     (assoc :code form)))))))
 
 (comment
   (function-usage-possibilities '(ns holmes
