@@ -5,15 +5,16 @@
 
 (def ^:private rules #{rule.read-string/check})
 
+(defn ^:private remove-ns-from-forms [forms ns-declaration]
+  (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
+    (-> ns-declaration-index
+        (drop forms)
+        vec)))
+
 (defn ^:private parser [code]
   (let [forms (p/code->data! code)
         ns-declaration (logic.namespace/find-ns-declaration forms)
-        forms-without-ns (some-> ns-declaration
-                                 meta
-                                 :index
-                                 inc
-                                 (drop forms)
-                                 vec)]
+        forms-without-ns (remove-ns-from-forms forms ns-declaration)]
     {:forms          (or forms-without-ns forms)
      :ns-declaration ns-declaration
      :rules []}))

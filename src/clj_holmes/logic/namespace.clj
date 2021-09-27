@@ -7,11 +7,13 @@
        (-> form first (= :require))))
 
 (defn ^:private index-of-ns-declaration [forms ns-declaration]
-  (.indexOf forms ns-declaration))
+  (-> forms (.indexOf ns-declaration) inc))
 
 ; public
 (defn find-ns-declaration [forms]
-  (when-let [ns-declaration (->> forms (filter ns-decl?) first)]
+  (when-let [ns-declaration (->> forms
+                                 (filter ns-decl?)
+                                 first)]
     (with-meta ns-declaration {:index (index-of-ns-declaration forms ns-declaration)})))
 
 (defn name-from-ns-declaration [form]

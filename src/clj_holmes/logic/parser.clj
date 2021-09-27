@@ -2,11 +2,16 @@
   (:require [edamame.core :as edamame]
             [clj-holmes.logic.namespace :as logic.namespace]))
 
+(defn ^:private alias-require? [require-declaration]
+  (->> require-declaration
+       second
+       (= :as %)))
+
 (defn ^:private requires->auto-resolves-decl
   "Adapt requires from namespace declaration to a format used by edamame auto-resolve."
   [requires]
   (->> requires
-       (filter (comp #(= :as %) second))
+       (filter alias-require?)
        (map #(remove keyword? %))
        (map reverse)
        (reduce concat)
@@ -15,12 +20,12 @@
 (defn ^:private auto-resolves
   "Parses the first form and if it is a namespace declaration returns a map containing all requires aliases."
   [code]
-  (let [form (edamame/parse-string code {:all true})]
-    (let [namespace (logic.namespace/name-from-ns-declaration form)
-          ns-requires (logic.namespace/requires form)]
-      (-> ns-requires
-          requires->auto-resolves-decl
-          (assoc :current namespace)))))
+  (let [form (edamame/parse-string code {:all true})
+        namespace (logic.namespace/name-from-ns-declaration form)
+        ns-requires (logic.namespace/requires form)]
+    (-> ns-requires
+        requires->auto-resolves-decl
+        (assoc :current namespace))))
 
 (defn code->data!
   "Receives a clojure file and returns all forms as data containing lines and rows metadata."

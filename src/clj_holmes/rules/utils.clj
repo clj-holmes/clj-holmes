@@ -1,9 +1,18 @@
 (ns clj-holmes.rules.utils
   (:require [clj-holmes.logic.namespace :as logic.namespace]))
 
-(defn ^:private extract-tokens-from-form [form]
-  (tree-seq coll? identity form))
+; private
+(defn ^:private extract-tokens-from-forms [forms]
+  (->> forms
+       (map #(tree-seq coll? identity %))
+       (reduce concat)))
 
+(defn ^:private enrich-form [form]
+  (-> form
+      meta
+      (assoc :code form)))
+
+; public
 (defn function-usage-possibilities [ns-declaration ns-to-find function]
   (let [requires (-> ns-declaration logic.namespace/requires)
         namespace-alias (some-> requires
@@ -16,14 +25,11 @@
          set)))
 
 (defn find-in-forms [f forms]
-  (let [tokens (->> forms (map extract-tokens-from-form) (reduce concat))]
-    (->> tokens
-         (map f)
-         (filterv identity)
-         (mapv (fn [form]
-                 (-> form
-                     meta
-                     (assoc :code form)))))))
+  (->> forms
+       extract-tokens-from-forms
+       (map f)
+       (filterv identity)
+       (mapv enrich-form)))
 
 (comment
   (function-usage-possibilities '(ns holmes
