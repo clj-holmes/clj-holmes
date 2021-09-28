@@ -1,0 +1,13 @@
+name: Clojars deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy to clojars
+      run: lein deploy clojars
