@@ -6,6 +6,11 @@
             [clojure.string :as string])
   (:import (java.io File)))
 
+(defn ^:private remove-dot-slash [filename]
+  (if (string/starts-with? filename "./")
+    (string/replace filename #"\./" "")
+    filename))
+
 (defn ^:private clj-file? [file]
   (and (.isFile file)
        (-> file .toString (string/includes? "project.clj") not)
@@ -16,7 +21,8 @@
        File.
        file-seq
        (filter clj-file?)
-       (map str)))
+       (map str)
+       (map remove-dot-slash)))
 
 (defn ^:private scan [filename]
   (println filename)

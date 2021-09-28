@@ -1,6 +1,5 @@
 (ns clj-holmes.rules.utils
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [clojure.zip :as z]))
+  (:require [clj-holmes.logic.namespace :as logic.namespace]))
 
 ; private
 (defn ^:private enrich-form [form]
