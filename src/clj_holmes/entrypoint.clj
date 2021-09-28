@@ -22,13 +22,14 @@
         scan-result (engine/process code)]
     (assoc scan-result :filename filename)))
 
+(defn ^:private save-sarif! [scans directory]
+  (let [sarif-report (sarif/scans->sarif scans)
+        sarif-output-file (format "%s/report.sarif" directory)]
+    (when sarif-report
+      (->> sarif-report json/write-str (spit sarif-output-file))
+      (println "Sarif report can be find in" sarif-output-file))))
+
 (defn -main [directory]
   (let [files (clj-files-from-directory directory)
-        scans-results (map scan files)
-        sarif-report (sarif/scans->sarif scans-results)
-        sarif-output-file (format "%s/scan.sarif" directory)]
-    (->> sarif-report json/write-str (spit sarif-output-file))
-    (println "Sarif report can be find in" sarif-output-file)))
-
-(comment
-  (-main "/home/dpr/dev/nu/auth"))
+        scans-results (map scan files)]
+    (save-sarif! scans-results directory)))

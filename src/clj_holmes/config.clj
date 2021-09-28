@@ -9,4 +9,7 @@
 (def readers
   "List of custom readers."
   {'nu/time identity
-   'nu/date identity})
+   'datomic.db.DbId identity
+   'nu/date identity
+   'nu/prototypes-for identity
+   'nu/workload-for identity})

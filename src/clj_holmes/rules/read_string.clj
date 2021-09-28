@@ -19,10 +19,12 @@
 (def rule
   {:id               :read-string
    :name             "read-string serialization RCE"
-   :shortDescription {:text "Find usage of vulnerable function read-string"}
-   :fullDescription  {:text "Find usage of vulnerable function read-string"}
-   :help             {:text "Find usage of vulnerable function read-string"}
-   :properties       {:precision :medium}})
+   :shortDescription {:text "Usage of vulnerable function clojure.core/read-string"}
+   :fullDescription  {:text "Attackers can exploit vulnerable deserialization functions which could lead to a remote code execution."}
+   :help             {:text "Usage of vulnerable function clojure.core/read-string"}
+   :properties       {:precision :medium
+                      :security-severity 8.0
+                      :problem {:severity :error}}})
 
 (defn check [{:keys [forms ns-declaration]}]
   (let [fn-to-find (utils/function-usage-possibilities ns-declaration 'clojure.core 'read-string)

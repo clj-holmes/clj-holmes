@@ -1,7 +1,6 @@
 (ns clj-holmes.logic.sarif
   (:require [clj-holmes.config :as config]))
 
-
 (def ^:private rules
   (mapv :definition config/rules))
 
@@ -13,27 +12,28 @@
                         :informationUri "https://github.com/mthbernardes/clj-holmes"
                         :rules          rules}}}]})
 
-(defn ^:private finding->location [{:keys [row col end-row end-col]} filename]
-  (let [uri (str "file://" filename)]
-    {:physicalLocation
-     {:artifactLocation {:uri uri}
-      :region           {:startLine   row
-                         :endLine     end-row
-                         :startColumn col
-                         :endColumn   end-col}}}))
-
 (defn ^:private result-by-rule [{:keys [id definition findings]} filename]
-  (let [locations (mapv #(finding->location % filename) findings)]
-    {:ruleId    id
-     :message   {:text definition}
-     :locations locations}))
+  (mapv (fn [{:keys [row col end-row end-col]}]
+          (let [uri (str "file://" filename)]
+            {:ruleId    id
+             :message   {:text definition}
+             :locations [{:physicalLocation
+                          {:artifactLocation {:uri uri}
+                           :region           {:startLine   row
+                                              :endLine     end-row
+                                              :startColumn col
+                                              :endColumn   end-col}}}]}))
+        findings))
 
 (defn ^:private scan-result->sarif-result [{:keys [rules filename]}]
-  (mapv #(result-by-rule % filename) rules))
+  (reduce (fn [results rule]
+            (concat results (result-by-rule rule filename)))
+          [] rules))
 
 (defn scans->sarif [scans]
-  (let [results (->> scans
-                     (map scan-result->sarif-result)
-                     (reduce concat)
-                     vec)]
-    (assoc-in sarif-boilerplate [:runs 0 :results] results)))
+  (let [results (reduce
+                  (fn [results rules]
+                    (concat results (scan-result->sarif-result rules)))
+                  [] scans)]
+    (when (seq results)
+      (assoc-in sarif-boilerplate [:runs 0 :results] (vec results)))))
