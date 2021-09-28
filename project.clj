@@ -1,4 +1,4 @@
-(defproject org.clojars.clj-holmes/clj-holmes "0.1.0"
+(defproject org.clojars.clj-holmes/clj-holmes "0.1.1"
   :description "Clojure SAST."
   :url "https://github.com/mthbernardes/clj-holmes"
   :scm {:name "git"
