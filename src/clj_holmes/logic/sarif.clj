@@ -32,8 +32,8 @@
 
 (defn scans->sarif [scans]
   (let [results (reduce
-                  (fn [results rules]
-                    (concat results (scan-result->sarif-result rules)))
-                  [] scans)]
+                 (fn [results rules]
+                   (concat results (scan-result->sarif-result rules)))
+                 [] scans)]
     (when (seq results)
       (assoc-in sarif-boilerplate [:runs 0 :results] (vec results)))))

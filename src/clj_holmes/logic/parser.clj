@@ -1,7 +1,7 @@
 (ns clj-holmes.logic.parser
-  (:require [edamame.core :as edamame]
+  (:require [clj-holmes.config :as config]
             [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.config :as config]))
+            [edamame.core :as edamame]))
 
 (defn ^:private alias-require? [require-declaration]
   (->> require-declaration
@@ -15,7 +15,6 @@
        (filter alias-require?)
        (reduce (fn [new [value _ key]]
                  (assoc new key value)) {})))
-
 
 (defn ^:private auto-resolves
   "Parses the first form and if it is a namespace declaration returns a map containing all requires aliases."

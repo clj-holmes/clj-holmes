@@ -1,5 +1,5 @@
 (ns clj-holmes.logic.namespace
-  (:require [clojure.tools.namespace.parse :refer [ns-decl? name-from-ns-decl]]))
+  (:require [clojure.tools.namespace.parse :refer [name-from-ns-decl ns-decl?]]))
 
 ; private
 (defn ^:private require-form? [form]

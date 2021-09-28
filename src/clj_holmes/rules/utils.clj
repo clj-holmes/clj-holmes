@@ -6,7 +6,7 @@
 (defn ^:private enrich-form [form]
   (-> form
       meta
-     (assoc :code form)))
+      (assoc :code form)))
 
 (defn ^:private apply-fn-in-all-forms [code f]
   (->> code

@@ -1,7 +1,7 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.logic.parser :as p]
+  (:require [clj-holmes.config :as config]
             [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.config :as config]))
+            [clj-holmes.logic.parser :as p]))
 
 (defn ^:private remove-ns-from-forms [forms ns-declaration]
   (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
