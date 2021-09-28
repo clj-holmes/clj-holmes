@@ -1,4 +1,5 @@
 (ns clj-holmes.entrypoint
+  (:gen-class)
   (:require [clj-holmes.engine :as engine]
             [clj-holmes.logic.sarif :as sarif]
             [clojure.data.json :as json]
