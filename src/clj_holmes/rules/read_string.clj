@@ -31,4 +31,6 @@
   (let [fn-to-find (utils/function-usage-possibilities ns-declaration 'clojure.core 'read-string)
         findings (utils/find-in-forms (check-if-form-is-vulnerable fn-to-find) forms)]
     (when (seq findings)
-      (assoc {} :findings findings :id (:id rule) :definition (-> rule :shortDescription :text)))))
+      (assoc {} :findings findings
+                :id (:id rule)
+                :definition (-> rule :shortDescription :text)))))

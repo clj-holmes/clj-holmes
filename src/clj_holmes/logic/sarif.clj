@@ -17,7 +17,7 @@
           {:ruleId    id
            :message   {:text definition}
            :locations [{:physicalLocation
-                        {:artifactLocation {:uri filename}
+                        {:artifactLocation {:uri (format "file://%s" filename)}
                          :region           {:startLine   row
                                             :endLine     end-row
                                             :startColumn col
