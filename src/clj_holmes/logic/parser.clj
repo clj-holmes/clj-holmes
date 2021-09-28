@@ -31,7 +31,8 @@
   "Receives a clojure file and returns all forms as data containing lines and rows metadata."
   [code]
   (let [auto-resolve (auto-resolves code)
-        opts {:auto-resolve auto-resolve :all true}]
+        opts {:auto-resolve auto-resolve :all true :readers {'nu/time identity
+                                                             'nu/date identity}}]
     (edamame/parse-string-all code opts)))
 
 (comment

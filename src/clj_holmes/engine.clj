@@ -21,7 +21,9 @@
 
 (defn process [code]
   (let [code-structure (parser code)
-        findings (mapv #(% code-structure) rules)]
+        findings (->> rules
+                      (mapv #(% code-structure))
+                      (filterv identity))]
     (assoc code-structure :rules findings)))
 
 (comment
