@@ -1,8 +1,9 @@
 (ns clj-holmes.logic.sarif
-  (:require [clj-holmes.rules.read-string :as rule.read-string]))
+  (:require [clj-holmes.config :as config]))
+
 
 (def ^:private rules
-  [rule.read-string/rule])
+  (mapv :definition config/rules))
 
 (def ^:private sarif-boilerplate
   {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"

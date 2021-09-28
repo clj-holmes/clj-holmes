@@ -8,19 +8,6 @@
       meta
      (assoc :code form)))
 
-#_(defn ^:private apply-fn-in-all-forms [code f]
-  (loop [zip (z/seq-zip code)
-         matches []]
-    (let [[form _] zip]
-      (println "Form: " form)
-      (if (z/end? zip)
-        matches
-        (if (coll? form)
-          (if-let [new-match (f form)]
-            (recur (z/next zip) (conj matches new-match))
-            (recur (z/next zip) matches))
-          (recur (z/next zip) matches))))))
-
 (defn ^:private apply-fn-in-all-forms [code f]
   (->> code
        (tree-seq coll? identity)

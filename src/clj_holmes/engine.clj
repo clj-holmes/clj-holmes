@@ -1,9 +1,7 @@
 (ns clj-holmes.engine
   (:require [clj-holmes.logic.parser :as p]
             [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.rules.read-string :as rule.read-string]))
-
-(def ^:private rules #{rule.read-string/check})
+            [clj-holmes.config :as config]))
 
 (defn ^:private remove-ns-from-forms [forms ns-declaration]
   (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
@@ -21,8 +19,9 @@
 
 (defn process [code]
   (let [code-structure (parser code)
-        findings (->> rules
-                      (mapv #(% code-structure))
+        findings (->> config/rules
+                      (mapv (fn [{:keys [entrypoint]}]
+                              (entrypoint code-structure)))
                       (filterv identity))]
     (assoc code-structure :rules findings)))
 

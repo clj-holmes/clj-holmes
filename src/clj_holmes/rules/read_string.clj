@@ -25,7 +25,6 @@
    :properties       {:precision :medium}})
 
 (defn check [{:keys [forms ns-declaration]}]
-  (println "check read-string")
   (let [fn-to-find (utils/function-usage-possibilities ns-declaration 'clojure.core 'read-string)
         findings (utils/find-in-forms (check-if-form-is-vulnerable fn-to-find) forms)]
     (when (seq findings)
