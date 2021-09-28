@@ -24,10 +24,8 @@
    :shortDescription {:text "Usage of vulnerable function clojure.core/read-string"}
    :fullDescription  {:text "Attackers can exploit vulnerable deserialization functions which could lead to a remote code execution."}
    :help             {:text "Usage of vulnerable function clojure.core/read-string"}
-   :properties       {:precision :medium
-                      :security-severity 8.0
-                      :tags ["rce"]
-                      :problem {:severity :error}}})
+   :properties       {:precision :high
+                      :tags ["rce"]}})
 
 (defn check [{:keys [forms ns-declaration]}]
   (let [fn-to-find (utils/function-usage-possibilities ns-declaration 'clojure.core 'read-string)
