@@ -19,6 +19,7 @@
        (map str)))
 
 (defn ^:private scan [filename]
+  (println filename)
   (let [code (slurp filename)
         scan-result (engine/process code)]
     (assoc scan-result :filename filename)))
