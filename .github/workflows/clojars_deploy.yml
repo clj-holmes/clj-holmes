@@ -12,4 +12,7 @@ jobs:
     - name: Download dependencies
       run: lein deps
     - name: Deploy to clojars
+      env: 
+         CLOJARS_USER: ${{ secret.CLOJARS_USER }}
+         CLOJARS_PASS: ${{ secret.CLOJARS_PASS }}
       run: lein deploy clojars
