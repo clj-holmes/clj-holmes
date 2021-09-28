@@ -5,3 +5,6 @@
   (let [code (slurp filename)
         scan-result (engine/process code)]
     (assoc scan-result :filename filename)))
+
+(comment
+  (scan "/home/dpr/shell.clj"))

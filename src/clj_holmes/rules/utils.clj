@@ -1,16 +1,23 @@
 (ns clj-holmes.rules.utils
-  (:require [clj-holmes.logic.namespace :as logic.namespace]))
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
+            [clojure.zip :as z]))
 
 ; private
-(defn ^:private extract-tokens-from-forms [forms]
-  (->> forms
-       (map #(tree-seq coll? identity %))
-       (reduce concat)))
-
 (defn ^:private enrich-form [form]
   (-> form
       meta
       (assoc :code form)))
+
+(defn ^:private apply-fn-in-all-forms [code f]
+  (loop [zip (z/seq-zip code)
+         matches []]
+    (let [[form location] zip]
+      (if (= :end location)
+        matches
+        (if (coll? form)
+          (when-let [new-matches (some->> form f (conj matches))]
+            (recur (z/next zip) new-matches))
+          (recur (z/next zip) matches))))))
 
 ; public
 (defn function-usage-possibilities [ns-declaration ns-to-find function]
@@ -26,13 +33,7 @@
 
 (defn find-in-forms [f forms]
   (->> forms
-       extract-tokens-from-forms
-       (map f)
-       (filterv identity)
+       (map #(apply-fn-in-all-forms % f))
+       (filter identity)
+       (reduce concat)
        (mapv enrich-form)))
-
-(comment
-  (function-usage-possibilities '(ns holmes
-                                   (:require [ada :as banana]))
-                                'ada
-                                'food))

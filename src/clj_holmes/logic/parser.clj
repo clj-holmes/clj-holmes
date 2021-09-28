@@ -5,7 +5,7 @@
 (defn ^:private alias-require? [require-declaration]
   (->> require-declaration
        second
-       (= :as %)))
+       (= :as)))
 
 (defn ^:private requires->auto-resolves-decl
   "Adapt requires from namespace declaration to a format used by edamame auto-resolve."
@@ -27,12 +27,12 @@
         requires->auto-resolves-decl
         (assoc :current namespace))))
 
-(defn code->data!
+(defn code->data
   "Receives a clojure file and returns all forms as data containing lines and rows metadata."
   [code]
   (let [auto-resolve (auto-resolves code)
         opts {:auto-resolve auto-resolve :all true}]
-    (-> code (edamame/parse-string-all opts) vec)))
+    (edamame/parse-string-all code opts)))
 
 (comment
-  (code->data! "(ns banana) (+ 1 1)"))
+  (code->data "(ns banana) (+ 1 1)"))

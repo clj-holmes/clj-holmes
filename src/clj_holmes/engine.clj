@@ -12,7 +12,7 @@
         vec)))
 
 (defn ^:private parser [code]
-  (let [forms (p/code->data! code)
+  (let [forms (p/code->data code)
         ns-declaration (logic.namespace/find-ns-declaration forms)
         forms-without-ns (remove-ns-from-forms forms ns-declaration)]
     {:forms          (or forms-without-ns forms)
