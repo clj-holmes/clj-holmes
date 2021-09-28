@@ -9,5 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Download dependencies
+      run: lein deps
     - name: Deploy to clojars
       run: lein deploy clojars
