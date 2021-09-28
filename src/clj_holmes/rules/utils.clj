@@ -1,6 +1,20 @@
 (ns clj-holmes.rules.utils
-  (:require [clj-holmes.logic.namespace :as logic.namespace]))
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
+            [clojure.zip :as z]))
 
+; private
+(defn ^:private enrich-form [form]
+  (-> form
+      meta
+      (assoc :code form)))
+
+(defn ^:private apply-fn-in-all-forms [code f]
+  (->> code
+       (tree-seq coll? identity)
+       (filter coll?)
+       (filter f)))
+
+; public
 (defn function-usage-possibilities [ns-declaration ns-to-find function]
   (let [requires (-> ns-declaration logic.namespace/requires)
         namespace-alias (some-> requires
@@ -12,11 +26,8 @@
          (filter identity)
          set)))
 
-(defn extract-tokens-from-form [form]
-  (tree-seq coll? identity form))
-
-(comment
-  (function-usage-possibilities '(ns holmes
-                                   (:require [ada :as banana]))
-                                'ada
-                                'food))
+(defn find-in-forms [f forms]
+  (->> forms
+       (map #(apply-fn-in-all-forms % f))
+       (reduce concat)
+       (mapv enrich-form)))

@@ -1,19 +1,29 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.diplomat.parser :as p]
-            [clj-holmes.logic.namespace :as logic.namespace]))
+  (:require [clj-holmes.config :as config]
+            [clj-holmes.logic.namespace :as logic.namespace]
+            [clj-holmes.logic.parser :as p]))
 
-(defn ^:private parser [filename]
-  (let [forms (p/code->data! filename)
+(defn ^:private remove-ns-from-forms [forms ns-declaration]
+  (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
+    (-> ns-declaration-index
+        (drop forms)
+        vec)))
+
+(defn ^:private parser [code]
+  (let [forms (p/code->data code)
         ns-declaration (logic.namespace/find-ns-declaration forms)
-        forms-without-ns (or (some-> ns-declaration
-                                     meta
-                                     :index
-                                     inc
-                                     (drop forms))
-                             forms)]
-    {:forms forms-without-ns
-     :filename filename
-     :ns-declaration ns-declaration}))
+        forms-without-ns (remove-ns-from-forms forms ns-declaration)]
+    {:forms          (or forms-without-ns forms)
+     :ns-declaration ns-declaration
+     :rules []}))
+
+(defn process [code]
+  (let [code-structure (parser code)
+        findings (->> config/rules
+                      (mapv (fn [{:keys [entrypoint]}]
+                              (entrypoint code-structure)))
+                      (filterv identity))]
+    (assoc code-structure :rules findings)))
 
 (comment
-  (parser "/home/dpr/dev/nu/machete/project-dependencies/src/project_dependencies/entrypoint.clj"))
+  (main "(ns banana (:require [clojure.core :as eita])) (eita/read-string \"1\")"))
