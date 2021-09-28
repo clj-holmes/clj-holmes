@@ -1,8 +1,8 @@
 (defproject org.clojars.clj-holmes/clj-holmes "0.1.1"
   :description "Clojure SAST."
-  :url "https://github.com/mthbernardes/clj-holmes"
+  :url "https://github.com/clj-holmes/clj-holmes"
   :scm {:name "git"
-        :url "https://github.com/mthbernardes/clj-holmes"}
+        :url "https://github.com/clj-holmes/clj-holmes"}
   :license {:name "Eclipse Public License 1.0"
             :url "http://opensource.org/licenses/eclipse-1.0.php"}
 
