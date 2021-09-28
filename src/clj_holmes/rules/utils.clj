@@ -12,8 +12,7 @@
   (->> code
        (tree-seq coll? identity)
        (filter coll?)
-       (map f)
-       (filter identity)))
+       (filter f)))
 
 ; public
 (defn function-usage-possibilities [ns-declaration ns-to-find function]
@@ -30,6 +29,5 @@
 (defn find-in-forms [f forms]
   (->> forms
        (map #(apply-fn-in-all-forms % f))
-       (filter identity)
        (reduce concat)
        (mapv enrich-form)))

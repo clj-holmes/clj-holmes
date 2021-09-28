@@ -2,21 +2,23 @@
   (:require [clj-holmes.rules.utils :as utils]
             [clojure.spec.alpha :as s]))
 
-(defn ^:private check-if-form-is-vulnerable [fn-to-find]
-  (fn vulnerable-to-read-string [form]
-    (when (s/valid? (s/or
-                      :direct-invoke
-                      (s/cat :fn-to-find fn-to-find
-                             :anything-else (s/* any?))
+; private
+(defn ^:private check-if-form-is-vulnerable
+  "Returns a function that receives a form and check if it's a vulnerable pattern and return a boolean."
+  [fn-to-find]
+  (fn vulnerable-to-read-string? [form]
+    (let [direct-invoke (s/cat :fn-to-find fn-to-find
+                               :anything-else (s/* any?))
+          invoke-inside-other-fn (s/cat :anything-else (s/* any?)
+                                        :fn-to-find fn-to-find
+                                        :rest (s/* any?))]
+      (s/valid? (s/or :direct-invoke direct-invoke
+                      :invoke-inside-other-fn invoke-inside-other-fn)
+                form))))
 
-                      :invoke-inside-other-fn
-                      (s/cat :anything-else (s/* any?)
-                             :fn-to-find fn-to-find
-                             :rest (s/* any?)))
-                    form)
-      form)))
-
+; public
 (def rule
+  "Definition of a rule which is used by sarif."
   {:id               :read-string
    :name             "read-string serialization RCE"
    :shortDescription {:text "Usage of vulnerable function clojure.core/read-string"}
@@ -24,6 +26,7 @@
    :help             {:text "Usage of vulnerable function clojure.core/read-string"}
    :properties       {:precision :medium
                       :security-severity 8.0
+                      :tags ["rce"]
                       :problem {:severity :error}}})
 
 (defn check [{:keys [forms ns-declaration]}]
