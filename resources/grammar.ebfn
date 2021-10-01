@@ -1,0 +1,43 @@
+<forms> := form *
+<form> := sexpr | literals | wildcards | <space> ;
+
+sexpr := <'('> form *<')'>;
+<space> := < #"\s" >;
+
+wildcards := wildcard_any | w_any | w_backtick | w_char | w_deref |
+w_fn | w_keyword | w_list | w_macro_keyword | w_map | w_number | w_quote |
+w_string | w_symbol | w_vector;
+
+<wildcard_any> := '$';
+<wildcard> := <'$'>;
+<w_any> := wildcard '&';
+<w_backtick> := wildcard 'backtick';
+<w_char> := wildcard 'char';
+<w_deref> := wildcard 'char';
+<w_fn> := wildcard 'fn';
+<w_keyword> := wildcard 'keyword';
+<w_list> := wildcard 'list';
+<w_macro_keyword> := wildcard 'macro-keyword';
+<w_map> := wildcard 'map';
+<w_number> := wildcard 'number';
+<w_quote> := wildcard 'quote';
+<w_string> := wildcard 'string';
+<w_symbol> := wildcard 'symbol';
+<w_vector> := wildcard 'vector';
+
+<literals> := symbol | string | number | vector | list | keyword | regex ;
+
+string := #"\"[^\"]*\"";
+regex := #"#\"[^\"]*\"";
+
+vector := <'['> form * <']'>;
+list := <'\'('> form *<')'>;
+boolean := 'true' | 'false';
+number := #"\d*";
+nil := 'nil';
+
+<SYMBOL> := !boolean !gensym #"[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*";
+current_namespace_keyword := #"::[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*";
+keyword := !current_namespace_keyword #":[^\d\^`\\\"#~@:()\[\]{}\s,][^\^`\\\"#~@()\[\]{}\s,]*";
+gensym := !boolean #"[^/\.\d\^`\\\"#~@:()\[\]{}\s,][^/\.\^`\\\"#~@()\[\]{}\s,]*#";
+symbol := SYMBOL;
