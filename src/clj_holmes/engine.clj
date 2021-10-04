@@ -1,7 +1,7 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.config :as config]
-            [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.logic.parser :as p]))
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
+            [clj-holmes.logic.parser :as p]
+            [clj-holmes.rules.engine :as rules.engine]))
 
 (defn ^:private remove-ns-from-forms [forms ns-declaration]
   (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
@@ -17,13 +17,10 @@
      :ns-declaration ns-declaration
      :rules []}))
 
-(defn process [code]
+(defn process [code rules]
   (let [code-structure (parser code)
-        findings (->> config/rules
-                      (mapv (fn [{:keys [entrypoint]}]
-                              (entrypoint code-structure)))
+        findings (->> rules
+                      (map (fn [rule]
+                             (rules.engine/check code-structure rule)))
                       (filterv identity))]
     (assoc code-structure :rules findings)))
-
-(comment
-  (main "(ns banana (:require [clojure.core :as eita])) (eita/read-string \"1\")"))

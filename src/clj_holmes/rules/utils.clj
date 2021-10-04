@@ -10,7 +10,6 @@
 (defn ^:private apply-fn-in-all-forms [code f]
   (->> code
        (tree-seq coll? identity)
-       (filter coll?)
        (filter f)))
 
 ; public

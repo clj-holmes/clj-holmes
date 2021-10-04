@@ -1,5 +1,6 @@
 (ns clj-holmes.logic.sarif
-  (:require [clj-holmes.config :as config]))
+  (:require [clj-holmes.config :as config]
+            [clojure.data.json :as json]))
 
 (def ^:private rules
   (mapv :definition config/rules))
@@ -36,3 +37,10 @@
                   [] scans)]
     (when (seq results)
       (assoc-in sarif-boilerplate [:runs 0 :results] (vec results)))))
+
+(defn save! [scans directory]
+  (let [sarif-report (scans->sarif scans)
+        sarif-output-file (format "%s/report.sarif" directory)]
+    (when sarif-report
+      (->> sarif-report json/write-str (spit sarif-output-file))
+      (println "Sarif report can be find in" sarif-output-file))))
