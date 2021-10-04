@@ -1,11 +1,7 @@
-(ns clj-holmes.logic.sarif
-  (:require [clj-holmes.config :as config]
-            [clojure.data.json :as json]))
+(ns clj-holmes.sarif
+  (:require [clojure.data.json :as json]))
 
-(def ^:private rules
-  (mapv :definition config/rules))
-
-(def ^:private sarif-boilerplate
+(defn ^:private sarif-boilerplate [rules]
   {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
    :version "2.1.0"
    :runs    [{:tool
@@ -30,17 +26,10 @@
             (concat results (result-by-rule rule filename)))
           [] rules))
 
-(defn scans->sarif [scans]
-  (let [results (reduce
-                  (fn [results rules]
-                    (concat results (scan-result->sarif-result rules)))
-                  [] scans)]
+(defn scans->sarif [scans rules]
+  (let [results (reduce (fn [results rules]
+                          (concat results (scan-result->sarif-result rules)))
+                        [] scans)
+        sarif-boilerplate-with-rules (sarif-boilerplate rules)]
     (when (seq results)
-      (assoc-in sarif-boilerplate [:runs 0 :results] (vec results)))))
-
-(defn save! [scans directory]
-  (let [sarif-report (scans->sarif scans)
-        sarif-output-file (format "%s/report.sarif" directory)]
-    (when sarif-report
-      (->> sarif-report json/write-str (spit sarif-output-file))
-      (println "Sarif report can be find in" sarif-output-file))))
+      (assoc-in sarif-boilerplate-with-rules [:runs 0 :results] (vec results)))))
