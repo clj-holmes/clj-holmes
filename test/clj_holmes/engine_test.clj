@@ -1,6 +1,6 @@
 (ns clj-holmes.engine-test
-  (:require [clojure.test :refer :all]
-            [clj-holmes.engine :as engine]))
+  (:require [clj-holmes.engine :as engine]
+            [clojure.test :refer :all]))
 
 (def rule-single-pattern
   [{:definition {:id :example,

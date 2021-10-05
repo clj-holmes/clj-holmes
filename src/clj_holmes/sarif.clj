@@ -1,5 +1,4 @@
-(ns clj-holmes.sarif
-  (:require [clojure.data.json :as json]))
+(ns clj-holmes.sarif)
 
 (defn ^:private sarif-boilerplate [rules]
   {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
@@ -7,7 +6,7 @@
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
                         :informationUri "https://github.com/mthbernardes/clj-holmes"
-                        :rules          rules}}}]})
+                        :rules          (map :definition rules)}}}]})
 
 (defn ^:private result-by-rule [{:keys [id definition findings]} filename]
   (mapv (fn [{:keys [row col end-row end-col]}]

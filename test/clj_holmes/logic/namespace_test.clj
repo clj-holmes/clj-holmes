@@ -1,6 +1,6 @@
 (ns clj-holmes.logic.namespace-test
-  (:require [clojure.test :refer :all]
-            [clj-holmes.logic.namespace :as namespace]))
+  (:require [clj-holmes.logic.namespace :as namespace]
+            [clojure.test :refer :all]))
 
 (deftest find-ns-declaration
   (testing "when there is not a ns declaration"
@@ -31,7 +31,6 @@
 
   (testing "when there is not a ns declared"
     (is (= 'user (namespace/name-from-ns-declaration '(+ 1 1))))))
-
 
 (deftest find-ns-in-requires
   (testing "when the namespace exist in requires"

@@ -1,6 +1,6 @@
 (ns clj-holmes.logic.parser-test
-  (:require [clojure.test :refer :all]
-            [clj-holmes.logic.parser :as parser]))
+  (:require [clj-holmes.logic.parser :as parser]
+            [clojure.test :refer :all]))
 
 (deftest code->data
   (testing "when there is no ns declaration"

@@ -27,5 +27,5 @@
                       (into []))]
     (when (seq findings)
       (assoc {} :findings findings
-                :id (:id definition)
-                    :definition (-> definition :shortDescription :text)))))
+             :id (:id definition)
+             :definition (-> definition :shortDescription :text)))))

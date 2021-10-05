@@ -1,7 +1,7 @@
 (ns clj-holmes.rules.utils-test
-  (:require [clojure.test :refer :all]
-            [clj-holmes.logic.parser :as parser]
-            [clj-holmes.rules.utils :as utils]))
+  (:require [clj-holmes.logic.parser :as parser]
+            [clj-holmes.rules.utils :as utils]
+            [clojure.test :refer :all]))
 
 (deftest find-in-forms
   (testing "when there is a match in forms"
