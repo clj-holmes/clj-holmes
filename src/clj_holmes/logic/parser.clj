@@ -32,7 +32,7 @@
   (let [auto-resolve (auto-resolves code)
         opts {:auto-resolve auto-resolve
               :all          true
-              :readers      config/readers}]
+              :readers      (fn [_] identity)}]
     (edamame/parse-string-all code opts)))
 
 (comment
