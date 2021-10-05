@@ -4,3 +4,4 @@
 .lein-repl-history
 target/
 pom.xml
+.lein-failures

@@ -16,3 +16,6 @@
         scans-results (map #(scan % rules) files)
         sarif-report (sarif/scans->sarif scans-results rules)]
     (filesystem/save-sarif-report! sarif-report src-directory)))
+
+(comment
+  (-main "/home/dpr/dev/nu/blueprinter" "resources/rules"))

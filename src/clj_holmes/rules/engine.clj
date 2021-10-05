@@ -21,8 +21,11 @@
 
 (defn check [{:keys [forms ns-declaration]} {:keys [definition patterns]}]
   (let [rules-functions (map #(build-spec ns-declaration %) patterns)
-        findings (first (map #(utils/find-in-forms % forms) rules-functions))]
+        findings (->> rules-functions
+                      (map #(utils/find-in-forms % forms))
+                      (reduce concat)
+                      (into []))]
     (when (seq findings)
       (assoc {} :findings findings
-             :id (:id definition)
-             :definition (-> definition :shortDescription :text)))))
+                :id (:id definition)
+                    :definition (-> definition :shortDescription :text)))))

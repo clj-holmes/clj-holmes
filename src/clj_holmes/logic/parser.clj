@@ -18,7 +18,7 @@
 (defn ^:private auto-resolves
   "Parses the first form and if it is a namespace declaration returns a map containing all requires aliases."
   [code]
-  (let [form (edamame/parse-string code {:all true})
+  (let [form (edamame/parse-string code {:all true :readers (fn [_] identity)})
         namespace (logic.namespace/name-from-ns-declaration form)
         ns-requires (logic.namespace/requires form)]
     (-> ns-requires
@@ -35,4 +35,5 @@
     (edamame/parse-string-all code opts)))
 
 (comment
+  (code->data "(defn ^:private teste [x] x)")
   (code->data "(ns banana) (+ 1 1)"))
