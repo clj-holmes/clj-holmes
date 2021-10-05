@@ -3,6 +3,9 @@ name: Clojars deploy
 on:
   push:
     branches: [ main ]
+    paths: 
+      - 'src/*'
+      - 'project.clj'
 
 jobs:
   deploy:
