@@ -1,7 +1,7 @@
 (ns clj-holmes.filesystem
-  (:require [clojure.string :as string]
-            [clojure.tools.reader.edn :as edn]
-            [clojure.data.json :as json])
+  (:require [clojure.data.json :as json]
+            [clojure.string :as string]
+            [clojure.tools.reader.edn :as edn])
   (:import (java.io File)))
 
 (defn ^:private remove-dot-slash [filename]

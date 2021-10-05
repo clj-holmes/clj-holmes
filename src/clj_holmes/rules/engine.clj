@@ -1,7 +1,7 @@
 (ns clj-holmes.rules.engine
   (:require [clj-holmes.rules.utils :as utils]
-            [shape-shifter.core :refer [pattern->spec *wildcards*]]
-            [clojure.spec.alpha :as s]))
+            [clojure.spec.alpha :as s]
+            [shape-shifter.core :refer [*wildcards* pattern->spec]]))
 
 (defn ^:private build-fn-to-find [function namespace ns-declaration check-required?]
   (if check-required?
@@ -24,5 +24,5 @@
         findings (first (map #(utils/find-in-forms % forms) rules-functions))]
     (when (seq findings)
       (assoc {} :findings findings
-                :id (:id definition)
-                :definition (-> definition :shortDescription :text)))))
+             :id (:id definition)
+             :definition (-> definition :shortDescription :text)))))

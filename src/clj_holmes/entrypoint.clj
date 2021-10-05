@@ -1,8 +1,8 @@
 (ns clj-holmes.entrypoint
   (:gen-class)
   (:require [clj-holmes.engine :as engine]
-            [clj-holmes.sarif :as sarif]
-            [clj-holmes.filesystem :as filesystem]))
+            [clj-holmes.filesystem :as filesystem]
+            [clj-holmes.sarif :as sarif]))
 
 (defn ^:private scan [filename rules-path]
   (println filename)
@@ -16,3 +16,5 @@
         scans-results (map #(scan % rules) files)
         sarif-report (sarif/scans->sarif scans-results rules)]
     (filesystem/save-sarif-report! sarif-report src-directory)))
+
+(qualified-keyword? :banana)
