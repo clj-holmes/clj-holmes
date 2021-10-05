@@ -4,10 +4,10 @@
             [clj-holmes.filesystem :as filesystem]
             [clj-holmes.sarif :as sarif]))
 
-(defn ^:private scan [filename rules-path]
+(defn ^:private scan [filename rules]
   (println filename)
   (let [code (slurp filename)
-        scan-result (engine/process code rules-path)]
+        scan-result (engine/process code rules)]
     (assoc scan-result :filename filename)))
 
 (defn -main [src-directory rules-directory]
