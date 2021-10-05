@@ -1,6 +1,5 @@
 (ns clj-holmes.logic.parser
-  (:require [clj-holmes.config :as config]
-            [clj-holmes.logic.namespace :as logic.namespace]
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
             [edamame.core :as edamame]))
 
 (defn ^:private alias-require? [require-declaration]
@@ -32,7 +31,7 @@
   (let [auto-resolve (auto-resolves code)
         opts {:auto-resolve auto-resolve
               :all          true
-              :readers      config/readers}]
+              :readers      (fn [_] identity)}]
     (edamame/parse-string-all code opts)))
 
 (comment
