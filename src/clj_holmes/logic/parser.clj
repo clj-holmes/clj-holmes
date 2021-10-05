@@ -35,5 +35,4 @@
     (edamame/parse-string-all code opts)))
 
 (comment
-  (code->data "(defn ^:private teste [x] x)")
   (code->data "(ns banana) (+ 1 1)"))
