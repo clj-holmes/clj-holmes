@@ -1,6 +1,5 @@
 (ns clj-holmes.logic.parser
-  (:require [clj-holmes.config :as config]
-            [clj-holmes.logic.namespace :as logic.namespace]
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
             [edamame.core :as edamame]))
 
 (defn ^:private alias-require? [require-declaration]
