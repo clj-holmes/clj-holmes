@@ -7,8 +7,8 @@
   (and (seq? form)
        (-> form first (= :require))))
 
-(defn ^:private index-of [^PersistentVector forms
-                          ^PersistentList ns-declaration]
+(defn ^:private index-of ^long [^PersistentVector forms
+                                ^PersistentList ns-declaration]
   (.indexOf forms ns-declaration))
 
 (defn ^:private index-of-ns-declaration [forms ns-declaration]
