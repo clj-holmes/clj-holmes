@@ -1,6 +1,6 @@
 (ns clj-holmes.logic.namespace
   (:require [clojure.tools.namespace.parse :refer [name-from-ns-decl ns-decl?]])
-  (:import (clojure.lang PersistentVector PersistentList)))
+  (:import (clojure.lang PersistentList PersistentVector)))
 
 ; private
 (defn ^:private require-form? [form]
