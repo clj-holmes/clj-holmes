@@ -10,10 +10,12 @@
 (defn ^:private requires->auto-resolves-decl
   "Adapt requires from namespace declaration to a format used by edamame auto-resolve."
   [requires]
-  (->> requires
-       (filter alias-require?)
-       (reduce (fn [new [value _ key]]
-                 (assoc new key value)) {})))
+  (let [filter-alias-require? (filter alias-require?)
+        assoc-or-return-new (fn assoc-or-return-new
+                              ([new] new)
+                              ([new [value _ key]]
+                               (assoc new key value)))]
+    (transduce filter-alias-require? assoc-or-return-new {} requires)))
 
 (defn ^:private auto-resolves
   "Parses the first form and if it is a namespace declaration returns a map containing all requires aliases."

@@ -11,9 +11,7 @@
 
 ; public
 (defn find-ns-declaration [forms]
-  (when-let [ns-declaration (->> forms
-                                 (filter ns-decl?)
-                                 first)]
+  (when-let [ns-declaration (first (filter ns-decl? forms))]
     (with-meta ns-declaration {:index (index-of-ns-declaration forms ns-declaration)})))
 
 (defn name-from-ns-declaration [form]
@@ -23,12 +21,9 @@
 
 (defn requires [ns-declaration]
   (when (ns-decl? ns-declaration)
-    (let [requires-decl (filter require-form? ns-declaration)]
-      (->> requires-decl
-           (map rest)
-           (reduce concat)))))
+    (let [filter-map (comp (filter require-form?) (map rest))]
+      (transduce filter-map concat ns-declaration))))
 
 (defn find-ns-in-requires [requires namespace]
-  (->> requires
-       (filter (comp #(= namespace %) first))
-       first))
+  (let [is-namespace? (comp #(= namespace %) first)]
+    (first (filter is-namespace? requires))))

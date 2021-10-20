@@ -20,12 +20,11 @@
           (s/valid? spec form))))))
 
 (defn check [{:keys [forms ns-declaration]} {:keys [definition patterns]}]
-  (let [rules-functions (map #(build-spec ns-declaration %) patterns)
-        findings (->> rules-functions
-                      (map #(utils/find-in-forms % forms))
-                      (reduce concat)
-                      (into []))]
+  (let [finder (comp
+                (map #(build-spec ns-declaration %))
+                (map #(utils/find-in-forms forms %)))
+        findings (transduce finder concat patterns)]
     (when (seq findings)
-      (assoc {} :findings findings
+      (assoc {} :findings (into [] findings)
              :id (:id definition)
              :definition (-> definition :shortDescription :text)))))

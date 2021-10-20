@@ -15,19 +15,20 @@
        (-> file .toString (.endsWith ".clj"))))
 
 (defn clj-files-from-directory! [directory]
-  (->> directory
-       File.
-       file-seq
-       (filter clj-file?)
-       (map str)
-       (map remove-dot-slash)))
+  (let [file-sanitize (comp remove-dot-slash str)]
+    (->> directory
+         File.
+         file-seq
+         (filter clj-file?)
+         (map file-sanitize))))
 
 (defn load-rules! [directory]
-  (->> directory
-       File.
-       file-seq
-       (filter #(.isFile %))
-       (map (comp edn/read-string slurp))))
+  (let [reader (comp edn/read-string slurp)]
+    (->> directory
+         File.
+         file-seq
+         (filter #(.isFile %))
+         (map reader))))
 
 (defn save-sarif-report! [sarif-report directory]
   (let [sarif-output-file (format "%s/report.sarif" directory)]
