@@ -1,13 +1,18 @@
 (ns clj-holmes.logic.namespace
-  (:require [clojure.tools.namespace.parse :refer [name-from-ns-decl ns-decl?]]))
+  (:require [clojure.tools.namespace.parse :refer [name-from-ns-decl ns-decl?]])
+  (:import (clojure.lang PersistentVector PersistentList)))
 
 ; private
 (defn ^:private require-form? [form]
   (and (seq? form)
        (-> form first (= :require))))
 
+(defn ^:private index-of [^PersistentVector forms
+                          ^PersistentList ns-declaration]
+  (.indexOf forms ns-declaration))
+
 (defn ^:private index-of-ns-declaration [forms ns-declaration]
-  (-> forms (.indexOf ns-declaration) inc))
+  (inc (index-of forms ns-declaration)))
 
 ; public
 (defn find-ns-declaration [forms]
