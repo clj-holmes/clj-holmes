@@ -8,11 +8,11 @@
     (let [forms (parser/code->data "(+ 1 1)(- 10 39)")
           expected-output [{:code '+ :col 2 :end-col 3 :end-row 1 :row 1}
                            {:code '- :col 9 :end-col 10 :end-row 1 :row 1}]]
-      (is (= expected-output (utils/find-in-forms symbol? forms)))))
+      (is (= expected-output (utils/find-in-forms forms symbol?)))))
 
   (testing "when there is not a match in forms"
     (let [forms (parser/code->data "(+ 1 1)")]
-      (is (empty? (utils/find-in-forms string? forms))))))
+      (is (empty? (utils/find-in-forms forms string?))))))
 
 (deftest function-usage-possibilities
   (testing "when the namespace being looked up is present in requires"

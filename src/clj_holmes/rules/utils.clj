@@ -7,7 +7,7 @@
       meta
       (assoc :code form)))
 
-(defn ^:private apply-fn-in-all-forms [code f]
+(defn ^:private apply-fn-in-all-forms [f code]
   (->> code
        (tree-seq coll? identity)
        (filter f)))
@@ -24,8 +24,8 @@
          (filter identity)
          set)))
 
-(defn find-in-forms [f forms]
-  (->> forms
-       (map #(apply-fn-in-all-forms % f))
-       (reduce concat)
-       (mapv enrich-form)))
+(defn find-in-forms [forms f]
+  (let [map-apply-fn-in-all-forms (map (partial apply-fn-in-all-forms f))]
+    (->> forms
+         (transduce map-apply-fn-in-all-forms concat)
+         (mapv enrich-form))))
