@@ -1,4 +1,4 @@
-{:definition {:id               :read-string-example
+{:definition {:id               :read-string
               :name             "read-string serialization RCE"
               :shortDescription {:text "Usage of vulnerable function clojure.core/read-string"}
               :fullDescription  {:text "Attackers can exploit vulnerable deserialization functions which could lead to a remote code execution."}
@@ -8,4 +8,5 @@
  :patterns [{:function        read-string
              :namespace       clojure.core
              :check-required? true
+             :includes? true
              :pattern         "($& $custom-function $&)"}]}

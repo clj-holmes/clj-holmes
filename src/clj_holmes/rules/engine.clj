@@ -12,19 +12,38 @@
     `#{~function}))
 
 (defn ^:private build-spec [ns-declaration
-                            {:keys [function namespace check-required? pattern]}]
+                            {:keys [function namespace check-required? pattern] :as rule}]
   (let [fn-to-find (build-fn-to-find function namespace ns-declaration check-required?)]
     (binding [*wildcards* (merge *wildcards* {"$custom-function" fn-to-find})]
-      (let [spec (pattern->spec pattern)]
-        (fn check [form]
-          (s/valid? spec form))))))
+      (let [spec (pattern->spec pattern)
+            check-fn (fn check [form]
+                       (let [check-result (s/valid? spec form)]
+                         check-result))]
+        (assoc rule :check-fn check-fn)))))
+
+(defn ^:private match? [findings patterns]
+  (let [findings-includes (->> findings
+                               (filter :includes?)
+                               (map :pattern)
+                               set)
+        findings-not-includes (->> findings
+                                   (filter (comp not :includes?))
+                                   (map :pattern)
+                                   set)
+        patterns-not-includes (->> patterns
+                                   (filter (comp not :includes?))
+                                   (map :pattern)
+                                   set)]
+    (and (seq findings-includes)
+         (not= findings-not-includes patterns-not-includes))))
 
 (defn check [{:keys [forms ns-declaration]} {:keys [definition patterns]}]
   (let [finder (comp
-                (map #(build-spec ns-declaration %))
-                (map #(utils/find-in-forms forms %)))
+                 (map #(build-spec ns-declaration %))
+                 (map #(utils/find-in-forms forms %)))
         findings (transduce finder concat patterns)]
-    (when (seq findings)
+    (when (and (seq findings)
+               (match? findings patterns))
       (assoc {} :findings (into [] findings)
-             :id (:id definition)
-             :definition (-> definition :shortDescription :text)))))
+                :id (:id definition)
+                :definition (-> definition :shortDescription :text)))))

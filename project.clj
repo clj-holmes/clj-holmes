@@ -23,7 +23,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/data.json "2.4.0"]
-                 [org.clojars.clj-holmes/shape-shifter "0.1.2"]
+                 [org.clojars.clj-holmes/shape-shifter "0.1.6"]
                  [borkdude/edamame "0.0.11"]]
 
   :profiles {:uberjar {:global-vars {*assert* false}

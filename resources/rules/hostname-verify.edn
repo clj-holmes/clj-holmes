@@ -1,0 +1,9 @@
+{:definition {:id               :insecure-hostname-verifier
+              :name             "Improper Certificate Validation"
+              :shortDescription {:text "Improper Certificate Validation"}
+              :fullDescription  {:text "Insecure HostnameVerifier implementation detected. This will accept any SSL certificate with any hostname, which creates the possibility for man-in-the-middle attacks"}
+              :help             {:text "https://find-sec-bugs.github.io/bugs.htm#WEAK_HOSTNAME_VERIFIER"}
+              :properties       {:precision :high
+                                 :tags      ["misconfiguration"]}}
+ :patterns [{:pattern "(reify HostnameVerifier $& (verify [$&] $& true) $&)"
+             :includes? true}]}

@@ -1,0 +1,18 @@
+{:definition {:id               :xxe-clojure-xml
+              :name             "Clojure xml XXE"
+              :shortDescription {:text "XML vulnerable to XXE"}
+              :fullDescription  {:text "clojure.xml/parse being invoked without a safe SAXParser instance."}
+              :help             {:text "https://cheatsheetseries.owasp.org//cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html"}
+              :properties       {:precision :medium
+                                 :tags      ["xxe"]}}
+ :patterns [{:pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"
+             :includes? false}
+            {:pattern "(.setFeature \"http://xml.org/sax/features/external-general-entities\" false)"
+             :includes? false}
+            {:pattern "(.setFeature \"http://xml.org/sax/features/external-parameter-entities\" false)"
+             :includes? false}
+            {:pattern "($custom-function $&)"
+             :function parse
+             :namespace clojure.xml
+             :includes? true
+             :check-required? true}]}

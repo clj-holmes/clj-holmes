@@ -2,10 +2,12 @@
   (:require [clj-holmes.logic.namespace :as logic.namespace]))
 
 ; private
-(defn ^:private enrich-form [form]
+(defn ^:private enrich-form [includes? pattern form]
   (-> form
       meta
-      (assoc :code form)))
+      (assoc :code form)
+      (assoc :includes? includes?)
+      (assoc :pattern pattern)))
 
 (defn ^:private apply-fn-in-all-forms [f code]
   (->> code
@@ -24,8 +26,8 @@
          (filter identity)
          set)))
 
-(defn find-in-forms [forms f]
-  (let [map-apply-fn-in-all-forms (map (partial apply-fn-in-all-forms f))]
+(defn find-in-forms [forms {:keys [check-fn includes? pattern]}]
+  (let [map-apply-fn-in-all-forms (map (partial apply-fn-in-all-forms check-fn))]
     (->> forms
          (transduce map-apply-fn-in-all-forms concat)
-         (mapv enrich-form))))
+         (mapv (partial enrich-form includes? pattern)))))
