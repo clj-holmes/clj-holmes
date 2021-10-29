@@ -39,11 +39,11 @@
 
 (defn check [{:keys [forms ns-declaration]} {:keys [definition patterns]}]
   (let [finder (comp
-                 (map #(build-spec ns-declaration %))
-                 (map #(utils/find-in-forms forms %)))
+                (map #(build-spec ns-declaration %))
+                (map #(utils/find-in-forms forms %)))
         findings (transduce finder concat patterns)]
     (when (and (seq findings)
                (match? findings patterns))
       (assoc {} :findings (into [] findings)
-                :id (:id definition)
-                :definition (-> definition :shortDescription :text)))))
+             :id (:id definition)
+             :definition (-> definition :shortDescription :text)))))
