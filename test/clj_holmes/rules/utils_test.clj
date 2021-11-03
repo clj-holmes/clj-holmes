@@ -6,13 +6,15 @@
 (deftest find-in-forms
   (testing "when there is a match in forms"
     (let [forms (parser/code->data "(+ 1 1)(- 10 39)")
-          expected-output [{:code '+ :col 2 :end-col 3 :end-row 1 :row 1}
-                           {:code '- :col 9 :end-col 10 :end-row 1 :row 1}]]
-      (is (= expected-output (utils/find-in-forms forms symbol?)))))
+          rule {:check-fn symbol? :includes? true :pattern "$symbol"}
+          expected-output [{:row 1, :col 2, :end-row 1, :end-col 3, :code '+, :includes? true, :pattern "$symbol"}
+                           {:row 1, :col 9, :end-row 1, :end-col 10, :code '-, :includes? true, :pattern "$symbol"}]]
+      (is (= expected-output (utils/find-in-forms forms rule)))))
 
   (testing "when there is not a match in forms"
-    (let [forms (parser/code->data "(+ 1 1)")]
-      (is (empty? (utils/find-in-forms forms string?))))))
+    (let [forms (parser/code->data "(+ 1 1)")
+          rule {:check-fn string? :includes? true :pattern "$string"}]
+      (is (empty? (utils/find-in-forms forms rule))))))
 
 (deftest function-usage-possibilities
   (testing "when the namespace being looked up is present in requires"

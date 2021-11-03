@@ -1,4 +1,4 @@
-(defproject org.clojars.clj-holmes/clj-holmes "0.1.12"
+(defproject org.clojars.clj-holmes/clj-holmes "0.2.11"
   :description "Clojure SAST."
   :url "https://github.com/clj-holmes/clj-holmes"
   :scm {:name "git"
@@ -23,7 +23,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/data.json "2.4.0"]
-                 [org.clojars.clj-holmes/shape-shifter "0.1.2"]
+                 [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
   :profiles {:dev {:global-vars {*warn-on-reflection* true
                                  *unchecked-math* :warn-on-boxed}}
