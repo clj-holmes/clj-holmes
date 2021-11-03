@@ -9,12 +9,15 @@
     (string/replace filename #"\./" "")
     filename))
 
-(defn ^:private clj-file? [file]
-  (and (.isFile file)
+(defn ^:private file? [^File file]
+  (.isFile file))
+
+(defn ^:private clj-file? [^File file]
+  (and (file? file)
        (-> file .toString (string/includes? "project.clj") not)
        (-> file .toString (.endsWith ".clj"))))
 
-(defn clj-files-from-directory! [directory]
+(defn clj-files-from-directory! [^String directory]
   (let [file-sanitize (comp remove-dot-slash str)]
     (->> directory
          File.
@@ -22,12 +25,12 @@
          (filter clj-file?)
          (map file-sanitize))))
 
-(defn load-rules! [directory]
+(defn load-rules! [^String directory]
   (let [reader (comp edn/read-string slurp)]
     (->> directory
          File.
          file-seq
-         (filter #(.isFile %))
+         (filter file?)
          (map reader))))
 
 (defn save-sarif-report! [sarif-report directory]

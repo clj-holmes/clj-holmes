@@ -25,8 +25,9 @@
                  [org.clojure/data.json "2.4.0"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
-
-  :profiles {:uberjar {:global-vars {*assert* false}
+  :profiles {:dev {:global-vars {*warn-on-reflection* true
+                                 *unchecked-math* :warn-on-boxed}}
+             :uberjar {:global-vars {*assert* false}
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]
                        :aot         :all
