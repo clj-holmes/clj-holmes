@@ -3,7 +3,7 @@
               :shortDescription {:text "Triple DES (3DES or DESede) is considered deprecated. AES is the recommended cipher"}
               :fullDescription  {:text "Triple DES (3DES or DESede) is considered deprecated. AES is the recommended cipher"}
               :help             {:text "https://csrc.nist.gov/News/2017/Update-to-Current-Use-and-Deprecation-of-TDEA"}
-              :properties       {:precision :high
+              :properties       {:precision :medium
                                  :tags      ["sensitive-data-exposure"]}}
  :patterns   [{:pattern   "(javax.crypto.Cipher/getInstance \"DESede/CBC/NoPadding\")"
                :includes? true}
