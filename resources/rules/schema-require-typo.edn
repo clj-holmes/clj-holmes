@@ -1,0 +1,9 @@
+{:definition {:id               :schema-require-typo
+              :name             "Schema require typo"
+              :shortDescription {:text "Typo on schema declaration using :require instead of :required."}
+              :fullDescription  {:text "Typo on schema declaration using :require instead of :required."}
+              :help             {:text "Typo on schema declaration using :require instead of :required."}
+              :properties       {:precision :high
+                                 :tags      ["misconfiguration"]}}
+ :patterns [{:pattern "{:schema $ :require true}"
+             :includes? true}]}
