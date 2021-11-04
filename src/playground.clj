@@ -1,4 +1,6 @@
-(ns playground)
+(ns playground
+  (:require [clj-yaml.core :as yaml]
+            [clojure.java.io :as io]))
 
 ;escrita ;leitura ;manutenção
 
@@ -35,3 +37,9 @@
             {:patterns-either [{:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}
                                {:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}
                                {:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}]}]}
+
+(-> "rules/xxe.yml"
+    io/resource
+    slurp
+    yaml/parse-string
+    first)

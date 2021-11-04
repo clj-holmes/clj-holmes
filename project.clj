@@ -23,6 +23,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/data.json "2.4.0"]
+                 [clj-commons/clj-yaml "0.7.107"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
   :profiles {:dev {:global-vars {*warn-on-reflection* true
