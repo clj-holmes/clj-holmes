@@ -1,0 +1,36 @@
+{:id :xxe-clojure-xml
+  :name "Clojure xml XXE"
+  :severity :error
+  :message ""
+  :properties {:precision :medium
+                :tags ["xxe" "security" "vulnerability"]}
+  :patterns [{:patterns [{:not-pattern "(defn $& parse $& [$&] $&)"}]}
+  {:patterns [{:function 'parse
+                :namespace 'clojure.xml
+                :build-custom-function? true
+                :pattern "($custom-function $&)"}]}
+  {:patterns-either [{:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}
+                     {:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}
+                     {:not-pattern "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}]}]}
+- id: xxe-clojure-xml
+  name: Clojure xml XXE
+  severity: error
+  message: Usage of clojure xml parse
+  properties:
+    precision: medium
+    tags:
+      - xxe
+      - security
+      - vulnerability
+  patterns:
+    - patterns:
+        - pattern-not: (defn $& parse $& [$&] $&)
+    - patterns:
+        - function: parse
+          namespace: clojure.xml
+          build-custom-function?: true
+          pattern: ($custom-function $&)
+    - patterns-either:
+        - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
+        - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
+        - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
