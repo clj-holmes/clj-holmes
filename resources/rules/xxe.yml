@@ -15,7 +15,7 @@
         - function: parse
           namespace: clojure.xml
           custom-function?: true
-          pattern: ($custom-function $&)
+          pattern: ($& $custom-function $&)
     - patterns-either:
         - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
         - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)

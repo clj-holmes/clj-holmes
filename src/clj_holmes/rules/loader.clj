@@ -28,13 +28,20 @@
         (fn [form & _]
           (s/valid? spec form))))))
 
+(defn ^:private build-condition-fn [condition ]
+  (case condition
+    :and (fn [& elements]
+           (every? identity elements))
+    :not (partial not)))
+
 (defn ^:private prepare-rule* [entry]
   (if (and (map? entry)
            (or (:pattern entry)
                (:pattern-not entry)))
-    (let [condition (if (:pattern entry) :and :not)]
+    (let [condition (if (:pattern entry) :and :not)
+          condition-fn (build-condition-fn condition)]
       (-> entry
-          (assoc :condition condition)
+          (assoc :condition-fn condition-fn)
           (assoc :check-fn (build-pattern-fn entry))))
     entry))
 

@@ -16,4 +16,8 @@
     scans-results))
 
 (comment
-  (def result (scan "/home/dpr/dev/nu/common-core/src/common_core/semver.clj")))
+  (def result (first (scan "/home/dpr/dev/nu/common-soap/src/common_soap/xml.clj")))
+
+  ; como pegar os findings?
+  {:patterns [{:patterns        [{:patterns-either [{:findings [1]}]}]
+               :patterns-either [{:patterns-either [{:findings [3]}]}]}]})
