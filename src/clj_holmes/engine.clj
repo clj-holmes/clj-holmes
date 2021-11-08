@@ -1,6 +1,6 @@
 (ns clj-holmes.engine
   (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.logic.parser :as p]
+            [clj-holmes.logic.parser :as parser]
             [clj-holmes.rules.engine :as rules.engine]))
 
 (defn ^:private remove-ns-from-forms [forms ns-declaration]
@@ -10,17 +10,12 @@
         vec)))
 
 (defn ^:private parser [code]
-  (let [forms (p/code->data code)
+  (let [forms (parser/code->data code)
         ns-declaration (logic.namespace/find-ns-declaration forms)
         forms-without-ns (remove-ns-from-forms forms ns-declaration)]
-    {:forms          (or forms-without-ns forms)
-     :ns-declaration ns-declaration
-     :rules []}))
+    {:forms          (tree-seq coll? identity (or forms-without-ns forms))
+     :ns-declaration ns-declaration}))
 
 (defn process [code rules]
-  (let [code-structure (parser code)
-        findings (->> rules
-                      (map (fn [rule]
-                             (rules.engine/check code-structure rule)))
-                      (filterv identity))]
-    (assoc code-structure :rules findings)))
+  (let [code-structure (parser code)]
+    (pmap (partial rules.engine/run code-structure) rules)))

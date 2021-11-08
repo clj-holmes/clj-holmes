@@ -23,7 +23,7 @@
          File.
          file-seq
          (filter clj-file?)
-         (map file-sanitize))))
+         (pmap file-sanitize))))
 
 (defn load-rules! [^String directory]
   (let [reader (comp edn/read-string slurp)]
@@ -31,7 +31,7 @@
          File.
          file-seq
          (filter file?)
-         (map reader))))
+         (pmap reader))))
 
 (defn save-sarif-report! [sarif-report directory]
   (let [sarif-output-file (format "%s/report.sarif" directory)]

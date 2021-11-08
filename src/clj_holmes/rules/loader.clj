@@ -1,10 +1,12 @@
-(ns playground
+(ns clj-holmes.rules.loader
   (:require [clj-holmes.rules.utils :as utils]
             [clojure.java.io :as io]
             [clojure.spec.alpha :as s]
+            [clojure.string :as string]
             [clojure.walk :as walk]
             [shape-shifter.core :refer [*wildcards* pattern->spec]]
-            [tupelo.parse.yaml :as yaml]))
+            [tupelo.parse.yaml :as yaml])
+  (:import (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
   (->> function
@@ -30,26 +32,28 @@
   (if (and (map? entry)
            (or (:pattern entry)
                (:pattern-not entry)))
-    (assoc entry :check-fn (build-pattern-fn entry))
+    (let [condition (if (:pattern entry) :and :not)]
+      (-> entry
+          (assoc :condition condition)
+          (assoc :check-fn (build-pattern-fn entry))))
     entry))
 
-(defn ^:private execute-rule* [forms ns-declaration entry]
-  (if (and (map? entry) (:check-fn entry))
-    (let [check-fn (:check-fn entry)
-          results (filterv #(check-fn % ns-declaration) forms)]
-      (assoc entry :results results))
-    entry))
-
-(defn prepare-rule [rule]
+(defn ^:private prepare-rule [rule]
   (walk/prewalk prepare-rule* rule))
 
-(defn execute-rule [rule forms ns-declaration]
-  (walk/postwalk (partial execute-rule* forms ns-declaration) rule))
+(defn ^:private is-rule? [^File file]
+  (and (.isFile file)
+       (-> file .getName (string/ends-with? ".yml"))))
 
-(defn check [rule forms ns-declaration]
-  (let [executed-rule (execute-rule rule forms ns-declaration)]
-    executed-rule))
+(defn ^:private local-rules []
+  (let [reader (comp first yaml/parse slurp)]
+    (->> "rules"
+         io/resource
+         .getFile
+         File.
+         file-seq
+         (filter is-rule?)
+         (map reader))))
 
-(comment
-  (def rule (->> "rules/xxe.yml" io/resource slurp yaml/parse first prepare-rule))
-  (check rule '[(a/parse "1")] '(ns banana (:require [clojure.xml :as a]))))
+(defn init! []
+  (map prepare-rule (local-rules)))
