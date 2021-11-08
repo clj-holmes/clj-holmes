@@ -9,13 +9,23 @@
           (assoc :findings results)))
     entry))
 
-(defn ^:private check* [entry]
-  (if (and (map? entry) (or (contains? entry :patterns)
-                            (contains? entry :patterns-either)))
+(defn ^:private entry->pattern-type [entry]
+  (cond
+    (contains? entry :patterns) :patterns
+    (contains? entry :patterns-either) :patterns-either
+    :else nil))
 
-    (let [kind (if (:patterns entry) :patterns :patterns-either)
-          check-fn (if (= kind :patterns) every? some)
-          result (boolean (check-fn (comp true? :result) (kind entry)))]
+(defn ^:private pattern-type->condition-fn [pattern-type]
+  (case pattern-type
+    :patterns every?
+    :patterns-either (comp boolean some)))
+
+(defn ^:private check* [entry]
+  (if (and (map? entry) (entry->pattern-type entry))
+    (let [pattern-type  (entry->pattern-type entry)
+          condition-fn  (pattern-type->condition-fn pattern-type)
+          pattern       (pattern-type entry)
+          result        (condition-fn :result pattern)]
      (assoc entry :result result))
     entry))
 
