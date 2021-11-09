@@ -44,8 +44,10 @@
 (defn ^:private execute-rule [rule forms ns-declaration]
   (walk/postwalk (partial execute-rule* forms ns-declaration) rule))
 
-(defn run [{:keys [forms ns-declaration]} rule]
+(defn run [{:keys [forms ns-declaration filename]} rule]
   (let [executed-rule (execute-rule rule forms ns-declaration)
         executed-rule-checked (check executed-rule)
         findings (extract-findings-from-rule executed-rule-checked)]
-    (assoc executed-rule-checked :findings findings)))
+    (-> executed-rule-checked
+        (assoc :filename filename)
+        (assoc :findings findings))))

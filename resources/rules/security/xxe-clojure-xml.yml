@@ -18,5 +18,5 @@
           pattern: ($& $custom-function $&)
     - patterns-either:
         - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
-        - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
-        - pattern-not: (.setFeature "http://apache.org/xml/features/disallow-doctype-decl" true)
+        - pattern-not: (.setFeature "http://xml.org/sax/features/external-general-entities" false)
+        - pattern-not: (.setFeature "http://xml.org/sax/features/external-parameter-entities" false)

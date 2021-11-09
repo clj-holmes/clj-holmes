@@ -6,9 +6,9 @@
 (def ^:private rules (rules.loader/init!))
 
 (defn ^:private scan [filename]
-  (println "Scanning: " filename)
+  (println "Scanning:" filename)
   (let [code (slurp filename)]
-    (engine/process code rules)))
+    (engine/process filename code rules)))
 
 (defn -main [src-directory]
   (let [files (filesystem/clj-files-from-directory! src-directory)

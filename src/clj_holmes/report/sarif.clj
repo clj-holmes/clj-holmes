@@ -1,4 +1,4 @@
-(ns clj-holmes.sarif)
+(ns clj-holmes.report.sarif)
 
 (defn ^:private sarif-boilerplate [rules]
   {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"

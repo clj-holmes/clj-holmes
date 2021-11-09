@@ -1,0 +1,12 @@
+- id: deprecated-desede
+  name: Inadequate Encryption Strength
+  severity: error
+  message: Triple DES (3DES or DESede) is considered deprecated. AES is the recommended cipher
+  properties:
+    precision: medium
+    tags:
+      - security
+      - vulnerability
+  patterns-either:
+    - pattern: (Cipher/getInstance "DESede/CBC/NoPadding")
+    - pattern: (javax.crypto.Cipher/getInstance "DESede/CBC/NoPadding")

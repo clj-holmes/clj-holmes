@@ -1,0 +1,10 @@
+- id: schema-require-typo
+  name: Schema require typo
+  severity: error
+  message: Typo on schema declaration using :require instead of :required.
+  properties:
+    precision: medium
+    tags:
+      - correctness
+  patterns:
+    - pattern: "{:schema $ :require true}"

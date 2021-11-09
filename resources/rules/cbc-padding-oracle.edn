@@ -1,9 +1,0 @@
-{:definition {:id               :cbc-padding-oracle
-              :name             "Sensitive Data Exposure"
-              :shortDescription {:text "Using CBC with PKCS5Padding is susceptible to padding oracle attacks."}
-              :fullDescription  {:text "Using CBC with PKCS5Padding is susceptible to padding oracle attacks. A malicious actor could discern the difference between plaintext with valid or invalid padding."}
-              :help             {:text "https://find-sec-bugs.github.io/bugs.htm#PADDING_ORACLE"}
-              :properties       {:precision :low
-                                 :tags      ["misconfiguration"]}}
- :patterns [{:pattern "\"AES/GCM/NoPadding\""
-             :includes? true}]}
