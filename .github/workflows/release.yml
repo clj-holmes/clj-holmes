@@ -28,7 +28,7 @@ jobs:
       
       - name: Retrieve version
         run: |
-          echo ::set-env name=TAG_NAME::$(lein project-version)')
+          echo ::set-env name=TAG_NAME::$(lein project-version)
           
       - name: Release
         uses: softprops/action-gh-release@v1
