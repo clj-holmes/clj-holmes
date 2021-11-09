@@ -14,10 +14,3 @@
   (let [files (filesystem/clj-files-from-directory! src-directory)
         scans-results (pmap scan files)]
     scans-results))
-
-(comment
-  (def result (first (scan "/home/dpr/dev/nu/common-soap/src/common_soap/xml.clj")))
-
-  ; como pegar os findings?
-  {:patterns [{:patterns        [{:patterns-either [{:findings [1]}]}]
-               :patterns-either [{:patterns-either [{:findings [3]}]}]}]})
