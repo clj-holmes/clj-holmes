@@ -1,3 +1,4 @@
+name: Release
 on:
   push:
     branches: [ main ]
@@ -27,8 +28,7 @@ jobs:
         run: lein native
       
       - name: Retrieve version
-        run: |
-          echo ::set-env name=TAG_NAME::$(lein project-version)
+        run: echo "TAG_NAME=$(lein project-version)" >> $GITHUB_ENV
           
       - name: Release
         uses: softprops/action-gh-release@v1
