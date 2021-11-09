@@ -1,0 +1,27 @@
+jobs:
+  on:
+    push:
+      branches: [ main ]
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Graalvm
+        id: setup-graalvm
+        uses: DeLaGuardo/setup-graalvm@master
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      - name: Install native-image component
+        run: gu install native-image
+
+      - name: Generate clj-holmes release
+        run: lein do clean, uberjar, native
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: LATEST
+          files: ./target/clj-holmes
