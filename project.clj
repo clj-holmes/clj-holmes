@@ -41,6 +41,7 @@
                           "--initialize-at-build-time"
                           "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
                           "-H:Name=./target/${:name}"]
+            "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes" ["run" "-m" "clj-holmes.entrypoint"]
             "lint"       ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
             "lint-fix"   ["do" ["cljfmt" "fix"] ["nsorg" "--replace"]]})

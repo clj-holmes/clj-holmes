@@ -25,9 +25,13 @@ jobs:
 
       - name: Generate clj-holmes native binarty
         run: lein native
+      
+      - name: Retrieve version
+        run: |
+          echo ::set-env name=TAG_NAME::$(lein project-version)')
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: LATEST
+          tag_name: ${ env.TAG_NAME }
           files: ./target/clj-holmes
