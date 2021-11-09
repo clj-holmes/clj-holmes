@@ -28,7 +28,7 @@
         (fn [form & _]
           (s/valid? spec form))))))
 
-(defn ^:private build-condition-fn [condition ]
+(defn ^:private build-condition-fn [condition]
   (case condition
     :and (fn [& elements]
            (every? identity elements))

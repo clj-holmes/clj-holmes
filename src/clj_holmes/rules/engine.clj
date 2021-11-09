@@ -35,7 +35,7 @@
           condition-fn  (pattern-type->condition-fn pattern-type)
           pattern       (pattern-type entry)
           result        (condition-fn :result pattern)]
-     (assoc entry :result result))
+      (assoc entry :result result))
     entry))
 
 (defn ^:private check [rule]
