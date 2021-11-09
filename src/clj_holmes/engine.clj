@@ -19,4 +19,6 @@
 
 (defn process [filename code rules]
   (let [code-structure (parser filename code)]
-    (pmap (partial rules.engine/run code-structure) rules)))
+    (->> rules
+         (pmap (partial rules.engine/run code-structure))
+         (filter :result))))

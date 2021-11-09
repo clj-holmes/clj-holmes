@@ -22,6 +22,9 @@
 
   :resource-paths ["resources/"]
 
+  :main        clj-holmes.main
+  :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/data.json "2.4.0"]
@@ -33,8 +36,7 @@
              :uberjar {:global-vars {*assert* false}
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]
-                       :aot         :all
-                       :main        clj-holmes.entrypoint}}
+                       :aot         :all}}
 
   :aot :all
 
