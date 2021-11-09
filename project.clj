@@ -31,8 +31,10 @@
                  [tupelo "21.10.06b"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
-  :profiles {:dev {:global-vars {*warn-on-reflection* true
-                                 *unchecked-math* :warn-on-boxed}}
+  :profiles {:dev     {:global-vars {*warn-on-reflection* true
+                                     *unchecked-math*     :warn-on-boxed}
+                       :plugins     [[lein-shell "0.5.0"]]}
+
              :uberjar {:global-vars {*assert* false}
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]
@@ -40,6 +42,11 @@
 
   :aot :all
 
-  :aliases {"clj-holmes" ["run" "-m" "clj-holmes.entrypoint"]
+  :aliases {"native"     ["shell" "native-image" "--report-unsupported-elements-at-runtime"
+                          "--initialize-at-build-time"
+                          "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
+                          "-H:Name=./target/${:name}"]
+            "project-version" ["shell" "echo" "${:version}"]
+            "clj-holmes" ["run" "-m" "clj-holmes.entrypoint"]
             "lint"       ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
             "lint-fix"   ["do" ["cljfmt" "fix"] ["nsorg" "--replace"]]})
