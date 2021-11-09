@@ -1,14 +1,20 @@
-jobs:
-  on:
-    push:
-      branches: [ main ]
+on:
+  push:
+    branches: [ main ]
 
+jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate clj-holmes uberjar
+        run: lein do deps, clean, uberjar
+
       - name: Setup Graalvm
-        id: setup-graalvm
         uses: DeLaGuardo/setup-graalvm@master
+        id: setup-graalvm
         with:
           graalvm: '21.0.0.2'
           java: 'java11'
@@ -17,8 +23,8 @@ jobs:
       - name: Install native-image component
         run: gu install native-image
 
-      - name: Generate clj-holmes release
-        run: lein do clean, uberjar, native
+      - name: Generate clj-holmes native binarty
+        run: lein native
 
       - name: Release
         uses: softprops/action-gh-release@v1
