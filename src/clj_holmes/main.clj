@@ -6,18 +6,12 @@
             [clj-holmes.output.sarif :as sarif]
             [clj-holmes.rules.loader :as rules.loader]))
 
-(def ^:private rules (rules.loader/init!))
-
-(defn ^:private scan [filename]
-  (println "Scanning:" filename)
-  (let [code (slurp filename)]
-    (engine/process filename code rules)))
-
 (defn -main [src-directory]
   (let [files (filesystem/clj-files-from-directory! src-directory)
-        scans-results (->> files (pmap scan) (reduce concat))]
+        rules (rules.loader/init!)
+        progress-size (->> files count (/ 100) float)
+        scans-results (->> files
+                           (pmap #(engine/scan % rules progress-size))
+                           (reduce concat))]
     (sarif/output scans-results)
-    #_(shutdown-agents)))
-
-(comment
-  (-main "/home/dpr/dev/nu/common-soap"))
+    (shutdown-agents)))

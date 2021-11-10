@@ -22,13 +22,15 @@
 
   :resource-paths ["resources/"]
 
-  :main        clj-holmes.main
   :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+
+  :main        clj-holmes.main
 
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/data.json "2.4.0"]
                  [tupelo "21.10.06b"]
+                 [progrock "0.1.2"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
   :profiles {:dev     {:global-vars {*warn-on-reflection* true
@@ -36,11 +38,9 @@
                        :plugins     [[lein-shell "0.5.0"]]}
 
              :uberjar {:global-vars {*assert* false}
+                       :aot :all
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
-                                     "-Dclojure.spec.skip-macros=true"]
-                       :aot         :all}}
-
-  :aot :all
+                                     "-Dclojure.spec.skip-macros=true"]}}
 
   :aliases {"native"     ["shell" "native-image" "--report-unsupported-elements-at-runtime"
                           "--initialize-at-build-time"

@@ -15,10 +15,10 @@
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
                         :informationUri "https://github.com/mthbernardes/clj-holmes"
-                        :rules          (map result->sarif-rule results)}}}]})
+                        :rules          (set (pmap result->sarif-rule results))}}}]})
 
 (defn ^:private result->sarif-result [{:keys [id message findings filename]}]
-  (mapv (fn [{:keys [row col end-row end-col]}]
+  (pmap (fn [{:keys [row col end-row end-col]}]
           {:ruleId    id
            :message   {:text message}
            :locations [{:physicalLocation
@@ -31,6 +31,6 @@
 
 (defn output [results]
   (let [sarif-boilerplate (sarif-boilerplate results)
-        sarif-results (reduce concat (mapv result->sarif-result results))
+        sarif-results (transduce (map result->sarif-result) concat results) #_(reduce concat )
         sarif-report (assoc-in sarif-boilerplate [:runs 0 :results] sarif-results)]
     (spit "/tmp/result.json" (json/write-str sarif-report))))

@@ -5,7 +5,7 @@
   (->> rule
        (tree-seq coll? identity)
        (filter :findings)
-       (map :findings)
+       (pmap :findings)
        (reduce concat)
        (into [])))
 
