@@ -9,5 +9,5 @@
 
 (defn output [result]
   (->> result
-       (mapv build-output-data )
+       (mapv build-output-data)
        pprint/print-table))
