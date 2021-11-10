@@ -29,8 +29,8 @@
                                             :endColumn   end-col}}}]})
         findings))
 
-(defn output [results]
+(defn output [results output-file]
   (let [sarif-boilerplate (sarif-boilerplate results)
         sarif-results (transduce (map result->sarif-result) concat results) #_(reduce concat)
         sarif-report (assoc-in sarif-boilerplate [:runs 0 :results] sarif-results)]
-    (spit "/tmp/result.json" (json/write-str sarif-report))))
+    (spit output-file (json/write-str sarif-report))))

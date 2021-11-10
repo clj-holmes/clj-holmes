@@ -62,5 +62,16 @@
          (filter is-rule?)
          (map reader))))
 
-(defn init! []
-  (map prepare-rule (local-rules)))
+(defn ^:private filter-by-tags [rule-tags rules]
+  (if (seq rule-tags)
+    (filter (fn [rule]
+              (let [existing-rule-tags (get-in rule [:properties :tags])]
+                (boolean (some (set existing-rule-tags) rule-tags))))
+            rules)
+    rules))
+
+(defn init! [{:keys [rule-tags]}]
+  (->> (local-rules)
+       (map prepare-rule)
+       (filter-by-tags rule-tags)))
+
