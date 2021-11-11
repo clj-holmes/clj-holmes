@@ -1,11 +1,11 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
+  (:require [clj-holmes.filesystem :as filesystem]
+            [clj-holmes.logic.namespace :as logic.namespace]
             [clj-holmes.logic.parser :as parser]
+            [clj-holmes.output.main :as output]
             [clj-holmes.rules.engine :as rules.engine]
-            [progrock.core :as pr]
-            [clj-holmes.filesystem :as filesystem]
             [clj-holmes.rules.loader :as rules.loader]
-            [clj-holmes.output.main :as output]))
+            [progrock.core :as pr]))
 
 (def ^:private bar (atom (pr/progress-bar 100)))
 (def ^:private progress-count (atom 0))

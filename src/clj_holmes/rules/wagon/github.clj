@@ -1,10 +1,10 @@
 (ns clj-holmes.rules.wagon.github
   (:require [clj-http.client :as client]
             [clojure.java.io :refer [output-stream]]
-            [clojure.java.shell :as shell]
-            [clojure.java.io :as io])
-  (:import (java.net URI)
-           (java.io File)))
+            [clojure.java.io :as io]
+            [clojure.java.shell :as shell])
+  (:import (java.io File)
+           (java.net URI)))
 
 (defn tar-decompress [filename output-directory]
   (shell/sh "tar" "xf" filename "-C" output-directory))

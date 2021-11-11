@@ -25,9 +25,9 @@
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
     (tree-seq
-      (fn [^File f] (. f (isDirectory)))
-      (fn [^File d] (seq (. d (listFiles file-filter))))
-      file)))
+     (fn [^File f] (. f (isDirectory)))
+     (fn [^File d] (seq (. d (listFiles file-filter))))
+     file)))
 
 (defn clj-files-from-directory! [{:keys [scan-path ignored-paths]}]
   (let [file-sanitize (comp remove-dot-slash str)

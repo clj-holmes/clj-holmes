@@ -1,8 +1,8 @@
 (ns clj-holmes.main
   (:gen-class)
-  (:require [clj-holmes.engine :as engine]
-            [clj-holmes.rules.manager :as rules.manager]
-            [cli-matic.core :as cli]))
+  (:require [cli-matic.core :as cli]
+            [clj-holmes.engine :as engine]
+            [clj-holmes.rules.manager :as rules.manager]))
 
 (def CONFIGURATION
   {:app {:command "clj-holmes"
