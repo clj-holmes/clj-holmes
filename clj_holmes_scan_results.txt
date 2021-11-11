@@ -1,0 +1,5 @@
+
+|                                                 :filename |                           :name |                                                                                                                                                                :message | :rows |
+|-----------------------------------------------------------+---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------|
+|      /home/dpr/dev/nu/common-soap/src/common_soap/xml.clj |                 Clojure xml XXE |                                                                                                                                              Usage of clojure xml parse |  [65] |
+| /home/dpr/dev/nu/common-soap/src/common_soap/diplomat.clj | Improper Certificate Validation | Insecure HostnameVerifier implementation detected. This will accept any SSL certificate with any hostname, which creates the possibility for man-in-the-middle attacks. |  [35] |

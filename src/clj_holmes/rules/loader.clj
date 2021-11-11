@@ -1,6 +1,5 @@
 (ns clj-holmes.rules.loader
   (:require [clj-holmes.rules.utils :as utils]
-            [clojure.java.io :as io]
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
             [clojure.walk :as walk]
@@ -52,15 +51,14 @@
   (and (.isFile file)
        (-> file .getName (string/ends-with? ".yml"))))
 
-(defn ^:private local-rules []
+(defn ^:private read-rules [^String directory]
   (let [reader (comp first yaml/parse slurp)]
-    (->> "rules"
-         io/resource
-         .getFile
+    (->> directory
          File.
          file-seq
          (filter is-rule?)
-         (map reader))))
+         (map reader)
+         set)))
 
 (defn ^:private filter-rule-by-tags [rule-tags rules]
   (if (seq rule-tags)
@@ -70,8 +68,8 @@
             rules)
     rules))
 
-(defn init! [{:keys [rule-tags]}]
-  (->> (local-rules)
+(defn init! [{:keys [rule-tags rules-directory]}]
+  (->> rules-directory
+       read-rules
        (pmap prepare-rule)
        (filter-rule-by-tags rule-tags)))
-

@@ -3,9 +3,11 @@
             [clojure.java.io :refer [output-stream]]
             [clojure.java.shell :as shell]
             [clojure.java.io :as io])
-  (:import (java.util.zip InflaterInputStream)
-           (java.net URI)
+  (:import (java.net URI)
            (java.io File)))
+
+(defn tar-decompress [filename output-directory]
+  (shell/sh "tar" "xf" filename "-C" output-directory))
 
 (defn download-tarball [{:keys [owner project branch]}]
   (let [url (format "https://api.github.com/repos/%s/%s/tarball/%s" owner project branch)
@@ -18,15 +20,13 @@
    :project (.getRawPath uri)
    :branch  (or (.getFragment uri) "master")})
 
-(defn fetch [^URI uri {:keys [output-directory]}]
+(defn fetch [^URI uri output-directory]
   (let [project-information (extract-github-information-from-uri uri)
         tarball (download-tarball project-information)
         tarball-filename (format "%s/rules.tar" output-directory)]
-    (io/make-parents tarball-filename)
     (io/copy tarball (File. tarball-filename))
-    (shell/sh "tar" "xf" tarball-filename "-C" output-directory)
+    (tar-decompress tarball-filename output-directory)
     (io/delete-file tarball-filename)))
 
 (comment
-  (fetch (URI. "git://clj-holmes/clj-holmes-rules#main") {:output-directory "/tmp/clj-holmes-rules"})
-  )
+  (fetch (URI. "git://clj-holmes/clj-holmes-rules#main") {:output-directory "/tmp/clj-holmes-rules"}))

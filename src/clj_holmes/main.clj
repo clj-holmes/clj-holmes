@@ -1,6 +1,7 @@
 (ns clj-holmes.main
   (:gen-class)
   (:require [clj-holmes.engine :as engine]
+            [clj-holmes.rules.manager :as rules.manager]
             [cli-matic.core :as cli]))
 
 (def CONFIGURATION
@@ -11,13 +12,13 @@
                :description "Fetch rules from an external server"
                :opts [{:option "repository" :short "r"
                        :type :string
-                       :default :present
+                       :default "git://clj-holmes/clj-holmes-rules#main"
                        :as "Repository to download rules"}
                       {:option "output-directory" :short "o"
                        :type :string
                        :default "/tmp/clj-holmes-rules/"
                        :as "Directory to save rules"}]
-               :runs engine/scan}
+               :runs rules.manager/fetch}
               {:command "scan"
                :description "Performs a scan for a path"
                :opts [{:option "scan-path" :short "p"
