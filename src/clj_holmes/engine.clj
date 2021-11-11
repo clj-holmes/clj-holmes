@@ -40,12 +40,10 @@
         progress-size (->> files count (/ 100) float)
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
-                           #_(reduce concat))]
+                           (reduce concat))]
     scans-results
-    #_(output/output scans-results opts)
-    #_(shutdown-agents)))
+    (output/output scans-results opts)))
 
 (comment
   (def opts {:scan-path "/home/dpr/dev/nu/common-soap/" :rules-directory "/tmp/clj-holmes-rules"})
-  (scan opts)
-  )
+  (scan opts))
