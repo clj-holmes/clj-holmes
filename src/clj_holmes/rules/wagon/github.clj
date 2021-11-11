@@ -1,5 +1,5 @@
 (ns clj-holmes.rules.wagon.github
-  (:require [clj-http.client :as client]
+  (:require [clj-http.lite.client :as client]
             [clojure.java.io :refer [output-stream]]
             [clojure.java.io :as io]
             [clojure.java.shell :as shell])
@@ -10,7 +10,7 @@
   (shell/sh "tar" "xf" filename "-C" output-directory))
 
 (defn download-tarball [{:keys [owner project branch]}]
-  (let [url (format "https://api.github.com/repos/%s/%s/tarball/%s" owner project branch)
+  (let [url (format "https://api.github.com/repos/%s%s/tarball/%s" owner project branch)
         token (System/getenv "GITHUB_TOKEN")
         http-opts {:query-params {"access-token" token} :as :stream}]
     (-> url (client/get http-opts) :body)))

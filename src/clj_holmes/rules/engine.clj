@@ -10,14 +10,17 @@
        (into [])))
 
 (defn ^:private execute-rule* [forms ns-declaration {:keys [check-fn condition-fn] :as entry}]
-  (if (and (map? entry) check-fn)
-    (let [results (filterv #(check-fn % ns-declaration) forms)
-          results-with-metadata (mapv (fn [result]
+
+  (if (not (nil? check-fn))
+    (let [
+          #_#_results (filterv #(check-fn % ns-declaration) forms)
+          #_#_results-with-metadata (mapv (fn [result]
                                         (assoc (meta result) :code result)) results)]
-      (-> entry
+      #_(-> entry
           (assoc :result (condition-fn (-> results-with-metadata seq boolean)))
           (assoc :findings results-with-metadata)))
-    entry))
+    #_entry)
+  entry)
 
 (defn ^:private entry->pattern-type [entry]
   (cond
@@ -42,12 +45,18 @@
   (walk/postwalk check* rule))
 
 (defn ^:private execute-rule [rule forms ns-declaration]
+  (def rule rule)
+  (def forms forms)
+  (def ns-declaration ns-declaration)
   (walk/postwalk (partial execute-rule* forms ns-declaration) rule))
 
 (defn run [{:keys [forms ns-declaration filename]} rule]
-  (let [executed-rule (execute-rule rule forms ns-declaration)
-        executed-rule-checked (check executed-rule)
-        findings (extract-findings-from-rule executed-rule-checked)]
-    (-> executed-rule-checked
+  (let [#_#_executed-rule (execute-rule rule forms ns-declaration)
+        #_#_executed-rule-checked (check executed-rule)
+        #_#_findings (extract-findings-from-rule executed-rule-checked)]
+    #_(-> executed-rule-checked
         (assoc :filename filename)
         (assoc :findings findings))))
+
+#_(extract-findings-from-rule (check (execute-rule rule forms ns-declaration)))
+*e

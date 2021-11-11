@@ -1,10 +1,11 @@
 (ns clj-holmes.rules.loader
+  (:refer-clojure :exclude [load])
   (:require [clj-holmes.rules.utils :as utils]
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
             [clojure.walk :as walk]
             [shape-shifter.core :refer [*wildcards* pattern->spec]]
-            [tupelo.parse.yaml :as yaml])
+            [clj-yaml.core :as yaml])
   (:import (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
@@ -52,7 +53,7 @@
        (-> file .getName (string/ends-with? ".yml"))))
 
 (defn ^:private read-rules [^String directory]
-  (let [reader (comp first yaml/parse slurp)]
+  (let [reader (comp first yaml/parse-string slurp)]
     (->> directory
          File.
          file-seq

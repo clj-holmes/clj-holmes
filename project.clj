@@ -31,8 +31,9 @@
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
                  [cli-matic "0.4.3"]
-                 [clj-http "3.12.3"]
-                 [tupelo "21.10.06b"]
+                 [org.martinklepsch/clj-http-lite "0.4.3"]
+                 #_[tupelo "21.10.06b"]
+                 [clj-commons/clj-yaml "0.7.107"]
                  [progrock "0.1.2"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]
                  [borkdude/edamame "0.0.11"]]
@@ -42,13 +43,14 @@
 
              :uberjar {:global-vars {*assert* false}
                        :aot :all
+                       :main        clj-holmes.main
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
   :aliases {"native"     ["shell" "native-image" "--report-unsupported-elements-at-runtime"
                           "--initialize-at-build-time"
                           "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-                          "-H:Name=./target/${:name}"]
+                          "-H:Name=./target/${:name}" "--enable-https"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes" ["run" "-m" "clj-holmes.entrypoint"]
             "lint"       ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]

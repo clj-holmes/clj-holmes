@@ -39,11 +39,13 @@
         rules (rules.loader/init! opts)
         progress-size (->> files count (/ 100) float)
         scans-results (->> files
-                           (pmap #(scan-file % rules progress-size))
-                           (reduce concat))]
-    (output/output scans-results opts)
-    (shutdown-agents)))
+                           (mapv #(scan-file % rules progress-size))
+                           #_(reduce concat))]
+    scans-results
+    #_(output/output scans-results opts)
+    #_(shutdown-agents)))
 
 (comment
-  (def opts {:scan-path "/home/dpr/dev/nu/common-soap/"})
-  (scan opts))
+  (def opts {:scan-path "/home/dpr/dev/nu/common-soap/" :rules-directory "/tmp/clj-holmes-rules"})
+  (scan opts)
+  )
