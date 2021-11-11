@@ -2,7 +2,10 @@
   (:require [clj-holmes.logic.namespace :as logic.namespace]
             [clj-holmes.logic.parser :as parser]
             [clj-holmes.rules.engine :as rules.engine]
-            [progrock.core :as pr]))
+            [progrock.core :as pr]
+            [clj-holmes.filesystem :as filesystem]
+            [clj-holmes.rules.loader :as rules.loader]
+            [clj-holmes.output.main :as output]))
 
 (def ^:private bar (atom (pr/progress-bar 100)))
 (def ^:private progress-count (atom 0))
@@ -25,8 +28,22 @@
          (pmap (partial rules.engine/run code-structure))
          (filterv :result))))
 
-(defn scan [filename rules progress-size]
+(defn scan-file [filename rules progress-size]
   (let [code (slurp filename)
         result (process filename code rules)]
     (swap! progress-count (partial + progress-size))
     result))
+
+(defn scan [opts]
+  (let [files (filesystem/clj-files-from-directory! opts)
+        rules (rules.loader/init! opts)
+        progress-size (->> files count (/ 100) float)
+        scans-results (->> files
+                           (pmap #(scan-file % rules progress-size))
+                           (reduce concat))]
+    (output/output scans-results opts)
+    (shutdown-agents)))
+
+(comment
+  (def opts {:scan-path "/home/dpr/dev/nu/common-soap/"})
+  (scan opts))

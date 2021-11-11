@@ -31,6 +31,7 @@
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
                  [cli-matic "0.4.3"]
+                 [clj-http "3.12.3"]
                  [tupelo "21.10.06b"]
                  [progrock "0.1.2"]
                  [org.clojars.clj-holmes/shape-shifter "0.2.6"]

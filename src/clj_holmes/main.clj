@@ -1,33 +1,33 @@
 (ns clj-holmes.main
   (:gen-class)
   (:require [clj-holmes.engine :as engine]
-            [clj-holmes.filesystem :as filesystem]
-            [clj-holmes.output.main :as output]
-            [cli-matic.core :as cli]
-            [clj-holmes.rules.loader :as rules.loader]))
-
-(defn main [{:keys [scan-path] :as opts}]
-  (println opts)
-  (let [files (filesystem/clj-files-from-directory! scan-path)
-        rules (rules.loader/init! opts)
-        _     (println (count rules))
-        progress-size (->> files count (/ 100) float)
-        scans-results (->> files
-                           (pmap #(engine/scan % rules progress-size))
-                           (reduce concat))]
-    (output/output scans-results opts)
-    (shutdown-agents)))
+            [cli-matic.core :as cli]))
 
 (def CONFIGURATION
   {:app {:command "clj-holmes"
          :description "run clj-holmes"
          :version "1.0"}
-   :commands [{:command "scan"
+   :commands [{:command "fetch-rules"
+               :description "Fetch rules from an external server"
+               :opts [{:option "repository" :short "r"
+                       :type :string
+                       :default :present
+                       :as "Repository to download rules"}
+                      {:option "output-directory" :short "o"
+                       :type :string
+                       :default "/tmp/clj-holmes-rules/"
+                       :as "Directory to save rules"}]
+               :runs engine/scan}
+              {:command "scan"
                :description "Performs a scan for a path"
                :opts [{:option "scan-path" :short "p"
                        :type :string
                        :default :present
                        :as "Path to scan"}
+                      {:option "rules-directory" :short "d"
+                       :type :string
+                       :default "/tmp/clj-holmes-rules/"
+                       :as "Directory to read rules"}
                       {:option "output-file" :short "o"
                        :type :string
                        :default "clj_holmes_scan_results.txt"
@@ -43,7 +43,7 @@
                       {:option "ignored-paths" :short "i"
                        :type :string
                        :as "Glob for paths and files that shouldn't be scanned"}]
-               :runs main}]})
+               :runs engine/scan}]})
 
 (defn -main [& args]
   (cli/run-cmd args CONFIGURATION))
