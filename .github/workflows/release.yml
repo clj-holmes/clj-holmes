@@ -28,10 +28,10 @@ jobs:
         run: lein native
       
       - name: Retrieve version
-        run: echo "TAG_NAME=$(lein project-version)" >> $GITHUB_ENV
+        run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${ env.TAG_NAME }
+          tag_name: ${{ env.TAG_NAME }}
           files: ./target/clj-holmes
