@@ -5,7 +5,7 @@
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
             [clojure.walk :as walk]
-            [shape-shifter.core :refer [*wildcards* pattern->spec *config*]])
+            [shape-shifter.core :refer [*config* *wildcards* pattern->spec]])
   (:import (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
