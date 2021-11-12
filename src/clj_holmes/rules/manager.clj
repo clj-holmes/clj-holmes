@@ -12,5 +12,9 @@
 
 (defn fetch [{:keys [output-directory repository]}]
   (let [repository (URI. repository)]
-    (io/make-parents output-directory)
+    (.mkdirs (io/file output-directory))
     (fetch* repository output-directory)))
+
+(comment
+  (fetch {:output-directory "/tmp/clj-holmes-rules"
+          :repository "git://clj-holmes/clj-holmes-rules#main"}))

@@ -1,11 +1,11 @@
 (ns clj-holmes.rules.loader
   (:refer-clojure :exclude [load])
   (:require [clj-holmes.rules.utils :as utils]
+            [clj-yaml.core :as yaml]
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
             [clojure.walk :as walk]
-            [shape-shifter.core :refer [*wildcards* pattern->spec]]
-            [clj-yaml.core :as yaml])
+            [shape-shifter.core :refer [*wildcards* pattern->spec]])
   (:import (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]

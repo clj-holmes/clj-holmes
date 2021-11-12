@@ -45,5 +45,5 @@
     (output/output scans-results opts)))
 
 (comment
-  (def opts {:scan-path "/home/dpr/dev/nu/common-soap/" :rules-directory "/tmp/clj-holmes-rules"})
+  (def opts {:scan-path "/home/dpr/dev/nu/common-soap/" :rules-directory "/tmp/clj-holmes-rules" :output-type "stdout"})
   (scan opts))

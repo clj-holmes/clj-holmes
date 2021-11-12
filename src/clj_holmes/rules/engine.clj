@@ -11,7 +11,7 @@
 
 (defn ^:private execute-rule* [forms ns-declaration entry]
   (let [check-fn (:check-fn entry)
-        condition-fn (:condition-fn entry) ]
+        condition-fn (:condition-fn entry)]
     (if (not (nil? check-fn))
       (let [results (filterv #(check-fn % ns-declaration) forms)
             results-with-metadata (mapv (fn [result]

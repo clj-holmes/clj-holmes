@@ -22,21 +22,19 @@
 
   :resource-paths ["resources/"]
 
-  :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
-
   :main        clj-holmes.main
 
-  :dependencies [[org.clojure/clojure "1.10.3"]
+  :dependencies [[org.clojure/clojure "1.10.2-alpha1"]
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
                  [cli-matic "0.4.3"]
                  [org.martinklepsch/clj-http-lite "0.4.3"]
-                 #_[tupelo "21.10.06b"]
                  [clj-commons/clj-yaml "0.7.107"]
                  [progrock "0.1.2"]
-                 [org.clojars.clj-holmes/shape-shifter "0.2.6"]
+                 [org.clojars.clj-holmes/shape-shifter "0.3.6"]
                  [borkdude/edamame "0.0.11"]]
+
   :profiles {:dev     {:global-vars {*warn-on-reflection* true
                                      *unchecked-math*     :warn-on-boxed}
                        :plugins     [[lein-shell "0.5.0"]]}
