@@ -34,7 +34,7 @@
                        :default "clj_holmes_scan_results.txt"
                        :as "Output file"}
                       {:option "output-type" :short "t"
-                       :type #{"sarif" "json" "stdout"}
+                       :type #{"sarif" "stdout"}
                        :default "stdout"
                        :as "Output type"}
                       {:option "rule-tags" :short "r"
