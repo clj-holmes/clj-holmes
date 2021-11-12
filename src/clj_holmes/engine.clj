@@ -41,7 +41,6 @@
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
                            (reduce concat))]
-    scans-results
     (output/output scans-results opts)))
 
 (comment

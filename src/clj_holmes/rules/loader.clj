@@ -32,7 +32,7 @@
   (case condition
     :and (fn [& elements]
            (every? identity elements))
-    :not (partial not)))
+    :not not))
 
 (defn ^:private prepare-rule* [entry]
   (if (and (map? entry)
