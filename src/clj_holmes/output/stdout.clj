@@ -5,7 +5,7 @@
   (let [findings-rows (mapv :row findings)]
     (-> result
         (select-keys [:filename :name :message])
-        (assoc :rows findings-rows))))
+        (assoc :lines findings-rows))))
 
 (defn output [results output-file]
   (let [output-data (mapv build-output-data results)]
