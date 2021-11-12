@@ -5,7 +5,7 @@
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
             [clojure.walk :as walk]
-            [shape-shifter.core :refer [*wildcards* pattern->spec]])
+            [shape-shifter.core :refer [*wildcards* pattern->spec *config*]])
   (:import (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
@@ -15,16 +15,18 @@
        (map (fn [element] `'~element))
        set))
 
-(defn build-pattern-fn [{:keys [custom-function?] :as rule-pattern}]
+(defn build-pattern-fn [{:keys [custom-function? interpret-regex?] :as rule-pattern}]
   (let [pattern (or (:pattern rule-pattern) (:pattern-not rule-pattern))]
     (if custom-function?
       (let [{:keys [function namespace]} rule-pattern]
         (fn [form ns-declaration]
           (let [custom-function (build-custom-function function namespace ns-declaration)
-                spec (binding [*wildcards* (merge *wildcards* {"$custom-function" custom-function})]
+                spec (binding [*config* (assoc *config* :interpret-regex? (boolean interpret-regex?))
+                               *wildcards* (merge *wildcards* {"$custom-function" custom-function})]
                        (pattern->spec pattern))]
             (s/valid? spec form))))
-      (let [spec (pattern->spec pattern)]
+      (let [spec (binding [*config* (assoc *config* :interpret-regex? interpret-regex?)]
+                   (pattern->spec pattern))]
         (fn [form & _]
           (s/valid? spec form))))))
 
