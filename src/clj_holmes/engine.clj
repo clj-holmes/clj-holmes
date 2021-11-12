@@ -1,26 +1,44 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.logic.parser :as p]
-            [clj-holmes.rules.engine :as rules.engine]))
+  (:require [clj-holmes.filesystem :as filesystem]
+            [clj-holmes.logic.namespace :as logic.namespace]
+            [clj-holmes.logic.parser :as parser]
+            [clj-holmes.output.main :as output]
+            [clj-holmes.rules.engine :as rules.engine]
+            [clj-holmes.rules.loader :as rules.loader]
+            [progrock.core :as pr]))
 
-(defn ^:private remove-ns-from-forms [forms ns-declaration]
-  (when-let [ns-declaration-index (some-> ns-declaration meta :index)]
-    (-> ns-declaration-index
-        (drop forms)
-        vec)))
+(def ^:private bar (atom (pr/progress-bar 100)))
+(def ^:private progress-count (atom 0))
 
-(defn ^:private parser [code]
-  (let [forms (p/code->data code)
-        ns-declaration (logic.namespace/find-ns-declaration forms)
-        forms-without-ns (remove-ns-from-forms forms ns-declaration)]
-    {:forms          (or forms-without-ns forms)
-     :ns-declaration ns-declaration
-     :rules []}))
+(add-watch
+ progress-count
+ :print (fn [_ _ _ new-state]
+          (-> @bar (pr/tick new-state) pr/print)))
 
-(defn process [code rules]
-  (let [code-structure (parser code)
-        findings (->> rules
-                      (map (fn [rule]
-                             (rules.engine/check code-structure rule)))
-                      (filterv identity))]
-    (assoc code-structure :rules findings)))
+(defn ^:private parser [filename code]
+  (let [forms (parser/code->data code)
+        ns-declaration (logic.namespace/find-ns-declaration forms)]
+    {:forms          (tree-seq coll? identity forms)
+     :filename       filename
+     :ns-declaration ns-declaration}))
+
+(defn ^:private process [filename code rules]
+  (let [code-structure (parser filename code)]
+    (->> rules
+         (pmap (partial rules.engine/run code-structure))
+         (filterv :result))))
+
+(defn scan-file [filename rules progress-size]
+  (let [code (slurp filename)
+        result (process filename code rules)]
+    (swap! progress-count (partial + progress-size))
+    result))
+
+(defn scan [opts]
+  (let [files (filesystem/clj-files-from-directory! opts)
+        rules (rules.loader/init! opts)
+        progress-size (->> files count (/ 100) float)
+        scans-results (->> files
+                           (mapv #(scan-file % rules progress-size))
+                           (reduce concat))]
+    (output/output scans-results opts)))
