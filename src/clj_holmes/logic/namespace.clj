@@ -14,6 +14,10 @@
 (defn ^:private index-of-ns-declaration [forms ns-declaration]
   (inc (index-of forms ns-declaration)))
 
+(defn ^:private is-expected-require? [require]
+  (and (coll? require)
+       (= (second require) :as)))
+
 ; public
 (defn find-ns-declaration [forms]
   (when-let [ns-declaration (first (filter ns-decl? forms))]
@@ -26,11 +30,9 @@
 
 (defn requires [ns-declaration]
   (when (ns-decl? ns-declaration)
-    (let [filter-map (comp (filter require-form?) (map rest))]
+    (let [filter-map (comp (filter require-form?) (map rest) (filter is-expected-require?))]
       (->> ns-declaration
-           (transduce filter-map concat )
-           (filter #(and (coll? %)
-                         (= (second %) :as)))))))
+           (transduce filter-map concat)))))
 
 (defn find-ns-in-requires [requires namespace]
   (let [is-namespace? (comp #(= namespace %) first)]
