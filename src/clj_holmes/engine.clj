@@ -16,7 +16,7 @@
           (-> @bar (pr/tick new-state) pr/print)))
 
 (defn ^:private parser [filename code]
-  (let [forms (parser/code->data code)
+  (let [forms (parser/code->data code filename)
         ns-declaration (logic.namespace/find-ns-declaration forms)]
     {:forms          (tree-seq coll? identity forms)
      :filename       filename
