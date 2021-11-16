@@ -39,7 +39,7 @@ In order to execute a scan it is necessary to fetch the rules first which can be
 
 It's possible to provide another rules sources adding the `-r` or `--repository` parameter and the repository.
 
-`clj-holmes fetch-rules git://clj-holmes/clj-holmes-private-rules#main`
+`clj-holmes fetch-rules -r git://clj-holmes/clj-holmes-private-rules#main`
 
 # Scan
 ```
