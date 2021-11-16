@@ -27,7 +27,10 @@
 (defn requires [ns-declaration]
   (when (ns-decl? ns-declaration)
     (let [filter-map (comp (filter require-form?) (map rest))]
-      (transduce filter-map concat ns-declaration))))
+      (->> ns-declaration
+           (transduce filter-map concat )
+           (filter #(and (coll? %)
+                         (= (second %) :as)))))))
 
 (defn find-ns-in-requires [requires namespace]
   (let [is-namespace? (comp #(= namespace %) first)]
