@@ -2,7 +2,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.clj-holmes/clj-holmes.svg)](https://clojars.org/org.clojars.clj-holmes/clj-holmes)
 
-Clojure SAST (Static application security testing).
+A CLI SAST (Static application security testing) tool which was build with the intent to find vulnerable Clojure code via rules that use a simple [pattern language](https://github.com/clj-holmes/shape-shifter) but it can also be used to find any kind of code pattern.
 
 # Installlation
 `sudo curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes -o /usr/local/bin/clj-holmes`
