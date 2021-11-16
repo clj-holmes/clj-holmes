@@ -22,6 +22,12 @@
      :filename       filename
      :ns-declaration ns-declaration}))
 
+(defn ^:private count-progress-size [files]
+  (let [amount-of-files (count files)]
+    (if (zero? amount-of-files)
+      1
+      (->> amount-of-files (/ 100) float))))
+
 (defn ^:private process [filename code rules]
   (let [code-structure (parser filename code)]
     (->> rules
@@ -37,7 +43,7 @@
 (defn scan [opts]
   (let [files (filesystem/clj-files-from-directory! opts)
         rules (rules.loader/init! opts)
-        progress-size (->> files count (/ 100) float)
+        progress-size (count-progress-size files)
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
                            (reduce concat))]
