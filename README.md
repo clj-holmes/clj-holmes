@@ -23,7 +23,7 @@ To fetch a rule set `clj-holmes` expects a GitHub repository URL following the s
 
 `git://username/project-name#branch-name`
 
-## Fetch Rules
+## Fetching Rules
 ```
 NAME:
  clj-holmes fetch-rules - Fetch rules from an external server
@@ -45,7 +45,7 @@ It's also possible to provide another source for a rule set by adding the `-r` o
 
 `clj-holmes fetch-rules -r git://clj-holmes/clj-holmes-private-rules#main`
 
-# Scan a Project
+# Scanning a Project
 ```
 NAME:
  clj-holmes scan - Performs a scan for a path
