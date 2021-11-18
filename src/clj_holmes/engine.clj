@@ -15,29 +15,45 @@
  :print (fn [_ _ _ new-state]
           (-> @bar (pr/tick new-state) pr/print)))
 
-(defn ^:private parser [filename code]
-  (let [forms (parser/code->data code)
+(defn ^:private add-parent-node-meta [parent child]
+  (if (meta child)
+    (vary-meta child assoc :parent parent)
+    child))
+
+(defn ^:private build-form-tree [form]
+  (->> form
+       (tree-seq coll? identity)
+       (map (partial add-parent-node-meta form))))
+
+(defn ^:private parser [filename]
+  (let [code (slurp filename)
+        forms (parser/code->data filename code)
         ns-declaration (logic.namespace/find-ns-declaration forms)]
-    {:forms          (tree-seq coll? identity forms)
+    {:forms          (transduce (map build-form-tree) concat forms)
      :filename       filename
      :ns-declaration ns-declaration}))
 
-(defn ^:private process [filename code rules]
-  (let [code-structure (parser filename code)]
+(defn ^:private count-progress-size [files]
+  (let [amount-of-files (count files)]
+    (if (zero? amount-of-files)
+      1
+      (->> amount-of-files (/ 100) float))))
+
+(defn ^:private process [filename rules]
+  (let [code-structure (parser filename)]
     (->> rules
          (pmap (partial rules.engine/run code-structure))
          (filterv :result))))
 
 (defn scan-file [filename rules progress-size]
-  (let [code (slurp filename)
-        result (process filename code rules)]
+  (let [result (process filename rules)]
     (swap! progress-count (partial + progress-size))
     result))
 
 (defn scan [opts]
   (let [files (filesystem/clj-files-from-directory! opts)
         rules (rules.loader/init! opts)
-        progress-size (->> files count (/ 100) float)
+        progress-size (count-progress-size files)
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
                            (reduce concat))]
