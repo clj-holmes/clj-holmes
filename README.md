@@ -2,24 +2,28 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.clj-holmes/clj-holmes.svg)](https://clojars.org/org.clojars.clj-holmes/clj-holmes)
 
-A CLI SAST (Static application security testing) tool which was build with the intent to find vulnerable Clojure code via rules that use a simple [pattern language](https://github.com/clj-holmes/shape-shifter) but it can also be used to find any kind of code pattern.
+A CLI SAST (Static application security testing) tool which was built with the intent of finding vulnerable Clojure code via rules that use a simple [pattern language](https://github.com/clj-holmes/shape-shifter). Although finding vulnerabilities is its main purpose, `clj-holmes` can also be used to find any kind of code pattern.
 
-# Installlation
-`sudo curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes -o /usr/local/bin/clj-holmes`
+# Installation
+```
+curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes -o /tmp/clj-holmes
+sudo install -m 755 /tmp/clj-holmes /usr/local/bin/clj-holmes
+rm /tmp/clj-holmes
+```
 
 # Rules
-All public rules can be find in [here](https://github.com/clj-holmes/clj-holmes-rules). But it is possible to maintain your own set of rules.
+All public rules can be found [here](https://github.com/clj-holmes/clj-holmes-rules). It is also possible to maintain your own set of rules.
 
-clj-holmes currently supports the following rules source.
+`clj-holmes` currently supports the following rules sources:
 
-## Github
-The [Github](https://github.com/clj-holmes/clj-holmes/blob/main/src/clj_holmes/rules/wagon/github.clj) wagon supports public and private repositories, If it is a private repository an environment variable `GITHUB_TOKEN` needs to be set.
+## GitHub
+The [GitHub](https://github.com/clj-holmes/clj-holmes/blob/main/src/clj_holmes/rules/wagon/github.clj) wagon supports public and private repositories. In order to fetch rules from a private repository the environment `GITHUB_TOKEN` variable needs to be set.
 
-In order to work properly Github repository url needs to follows the specification above to works on clj-holmes.
+To fetch a rule set `clj-holmes` expects a GitHub repository URL following the specification below:
 
 `git://username/project-name#branch-name`
 
-## Fetch
+## Fetching Rules
 ```
 NAME:
  clj-holmes fetch-rules - Fetch rules from an external server
@@ -33,15 +37,15 @@ OPTIONS:
    -?, --help
 ```
 
-In order to execute a scan it is necessary to fetch the rules first which can be achieve with the following command.
+In order to execute a scan it is necessary to fetch the rules first. This can be achieve with the following command.
 
 `clj-holmes fetch-rules`
 
-It's possible to provide another rules sources adding the `-r` or `--repository` parameter and the repository.
+It's also possible to provide another source for a rule set by adding the `-r` or `--repository` parameter followed by the GitHub repository URL.
 
 `clj-holmes fetch-rules -r git://clj-holmes/clj-holmes-private-rules#main`
 
-# Scan
+# Scanning a Project
 ```
 NAME:
  clj-holmes scan - Performs a scan for a path
@@ -59,6 +63,6 @@ OPTIONS:
    -?, --help
 ```
 
-After downloading the rules it's possible to execute a scan only by providing the `-p` or `--scan-path` parameter value which must point to a clojure project.
+After fetching the rules, it is possible to execute a scan by providing the `-p` or `--scan-path` parameter followed by the path of the Clojure project to be scanned.
 
 `clj-holmes scan -p /tmp/clojure-project`
