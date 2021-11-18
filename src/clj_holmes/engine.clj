@@ -20,17 +20,25 @@
     (vary-meta child assoc :parent parent)
     child))
 
-(defn ^:private build-form-tree [form]
-  (->> form
-       (tree-seq coll? identity)
-       (map (partial add-parent-node-meta form))))
+(defn ^:private build-form-tree [ns-name form]
+  (println "=============")
+  (println form)
+  (let [form-name (when (and (list? form)
+                             (-> form second symbol?))
+                    (name (second form)))
+        namespaced-form (when form-name (keyword (name ns-name) form-name))]
+    (->> form
+         (tree-seq coll? identity)
+         (map (partial add-parent-node-meta namespaced-form)))))
 
 (defn ^:private parser [filename]
   (let [code (slurp filename)
-        forms (parser/code->data code filename )
-        ns-declaration (logic.namespace/find-ns-declaration forms)]
-    {:forms          (transduce (map build-form-tree) concat forms)
+        forms (parser/code->data code filename)
+        ns-declaration (logic.namespace/find-ns-declaration forms)
+        ns-name (logic.namespace/name-from-ns-declaration ns-declaration)]
+    {:forms          (transduce (map (partial build-form-tree ns-name)) concat forms)
      :filename       filename
+     :ns-name        ns-name
      :ns-declaration ns-declaration}))
 
 (defn ^:private count-progress-size [files]
@@ -57,4 +65,5 @@
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
                            (reduce concat))]
-    (output/output scans-results opts)))
+    scans-results
+    #_(output/output scans-results opts)))
