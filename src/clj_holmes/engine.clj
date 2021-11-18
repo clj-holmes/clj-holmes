@@ -27,7 +27,7 @@
 
 (defn ^:private parser [filename]
   (let [code (slurp filename)
-        forms (parser/code->data filename code)
+        forms (parser/code->data code filename )
         ns-declaration (logic.namespace/find-ns-declaration forms)]
     {:forms          (transduce (map build-form-tree) concat forms)
      :filename       filename
