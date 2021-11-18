@@ -14,9 +14,9 @@
 (defn ^:private index-of-ns-declaration [forms ns-declaration]
   (inc (index-of forms ns-declaration)))
 
-(defn ^:private is-expected-require? [require]
-  (and (coll? require)
-       (= (second require) :as)))
+(defn ^:private is-expected-require? [requires]
+  (filter #(and (coll? %)
+                (= (second %) :as)) requires))
 
 ; public
 (defn find-ns-declaration [forms]

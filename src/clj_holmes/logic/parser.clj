@@ -38,6 +38,3 @@
       (edamame/parse-string-all code opts))
     (catch Exception _
       (println "Impossible to parse:" filename))))
-
-(comment
-  (code->data "(ns banana (:require [jose :refer [maria])) (+ 1 1)" "banana.clj"))
