@@ -43,7 +43,11 @@
                        :as "Only use rules with specified tags to perform the scan"}
                       {:option "ignored-paths" :short "i"
                        :type :string
-                       :as "Glob for paths and files that shouldn't be scanned"}]
+                       :as "Regex for paths and files that shouldn't be scanned"}
+                      {:option "verbose" :short "v"
+                       :type :boolean
+                       :default true
+                       :as "Enable or disable scan process feedback."}]
                :runs engine/scan}]})
 
 (defn -main [& args]
