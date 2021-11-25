@@ -64,7 +64,7 @@
                          rule))
 
 (defn ^:private read-rules [^String directory]
-  (let [reader (comp  OrderedMap->Map first yaml/parse-string slurp)]
+  (let [reader (comp OrderedMap->Map first yaml/parse-string slurp)]
     (->> directory
          File.
          file-seq
