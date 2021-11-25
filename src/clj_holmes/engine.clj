@@ -39,3 +39,10 @@
   (let [out (if verbose *out* (new StringWriter))]
     (binding [*out* out]
       (scan* opts))))
+
+(comment
+  (scan {:scan-path       "/home/dpr/dev/nu/common-soap/"
+         :output-file     "banana"
+         :verbose         false
+         :output-type     "stdout"
+         :rules-directory "/tmp/clj-holmes-rules"}))

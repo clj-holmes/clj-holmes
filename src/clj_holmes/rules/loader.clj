@@ -6,7 +6,8 @@
             [clojure.string :as string]
             [clojure.walk :as walk]
             [shape-shifter.core :refer [*config* *wildcards* pattern->spec]])
-  (:import (java.io File)))
+  (:import (java.io File)
+           (flatland.ordered.map OrderedMap)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
   (->> function
@@ -54,8 +55,15 @@
   (and (.isFile file)
        (-> file .getName (string/ends-with? ".yml"))))
 
+(defn ^:private OrderedMap->Map [rule]
+  (walk/postwalk (fn [object]
+                           (if (instance? OrderedMap object)
+                             (into {} object)
+                             object))
+                         rule))
+
 (defn ^:private read-rules [^String directory]
-  (let [reader (comp first yaml/parse-string slurp)]
+  (let [reader (comp OrderedMap->Map first yaml/parse-string slurp)]
     (->> directory
          File.
          file-seq
