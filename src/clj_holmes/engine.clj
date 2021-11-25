@@ -57,4 +57,12 @@
         scans-results (->> files
                            (mapv #(scan-file % rules progress-size))
                            (reduce concat))]
-    (output/output scans-results opts)))
+    scans-results
+    #_(output/output scans-results opts)))
+
+(comment
+  (scan {:scan-path       "/home/dpr/dev/nu/common-soap/"
+         :output-file     "banana"
+         :verbose         false
+         :output-type     "stdout"
+         :rules-directory "/tmp/clj-holmes-rules"}))
