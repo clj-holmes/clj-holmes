@@ -98,9 +98,11 @@
                            read-rules
                            (filter-rule-by-tags rule-tags)
                            (filter #((complement s/valid?) ::specs.rule/rule %)))]
-    (if (seq invalid-rules)
+    (when (seq invalid-rules)
       (println (format "The following rules do not conform to the spec: %s"
-                       (mapv #(-> % meta :rule-path) invalid-rules))))))
+                       (mapv #(-> % meta :rule-path) invalid-rules)))
+      (run! #(s/explain ::specs.rule/rule %) invalid-rules)
+      false)))
 
 (comment
   (init! {:rules-directory "/tmp/clj-holmes-rules"})
