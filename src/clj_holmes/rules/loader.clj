@@ -1,6 +1,7 @@
 (ns clj-holmes.rules.loader
   (:refer-clojure :exclude [load])
   (:require [clj-holmes.rules.utils :as utils]
+            [clj-holmes.specs.rule :as specs.rule]
             [clj-yaml.core :as yaml]
             [clojure.spec.alpha :as s]
             [clojure.string :as string]
@@ -16,7 +17,7 @@
        (map (fn [element] `'~element))
        set))
 
-(defn build-pattern-fn [{:keys [custom-function? interpret-regex?] :as rule-pattern}]
+(defn ^:private build-pattern-fn [{:keys [custom-function? interpret-regex?] :as rule-pattern}]
   (let [pattern (or (:pattern rule-pattern) (:pattern-not rule-pattern))]
     (if custom-function?
       (let [{:keys [function namespace]} rule-pattern]
@@ -63,7 +64,7 @@
                          rule))
 
 (defn ^:private read-rules [^String directory]
-  (let [reader (comp OrderedMap->Map first yaml/parse-string slurp)]
+  (let [reader (comp  OrderedMap->Map first yaml/parse-string slurp)]
     (->> directory
          File.
          file-seq
@@ -82,5 +83,14 @@
 (defn init! [{:keys [rule-tags rules-directory]}]
   (->> rules-directory
        read-rules
-       (pmap prepare-rule)
-       (filter-rule-by-tags rule-tags)))
+       (filter-rule-by-tags rule-tags)
+       (pmap prepare-rule)))
+
+(defn test-it! [{:keys [rule-tags rules-directory]}]
+  (->> rules-directory
+       read-rules
+       (filter-rule-by-tags rule-tags)
+       (run! #(s/explain ::specs.rule/rule %))))
+
+(comment
+  (test-it! {:rules-directory "/tmp/clj-holmes-rules"}))
