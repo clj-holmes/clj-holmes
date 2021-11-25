@@ -1,5 +1,0 @@
-
-|                           :name |                                                                                                                                                                :message | :severity | :lines |
-|---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+--------|
-|                 Clojure xml XXE |                                                                                                                                              Usage of clojure xml parse |     error |   [65] |
-| Improper Certificate Validation | Insecure HostnameVerifier implementation detected. This will accept any SSL certificate with any hostname, which creates the possibility for man-in-the-middle attacks. |     error |   [35] |
