@@ -1,5 +1,7 @@
 (ns clj-holmes.filesystem
-  (:require [clojure.string :as string])
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
+            [clj-holmes.logic.parser :as parser]
+            [clojure.string :as string])
   (:import (java.io File FileFilter)))
 
 (defn ^:private remove-dot-slash [filename]
@@ -29,10 +31,35 @@
      (fn [^File d] (seq (. d (listFiles file-filter))))
      file)))
 
-(defn clj-files-from-directory! [{:keys [scan-path ignored-paths]}]
+(defn ^:private add-parent-node-meta [parent child]
+  (if (meta child)
+    (vary-meta child assoc :parent parent)
+    child))
+
+(defn ^:private build-form-tree [ns-name form]
+  (let [form-name (when (and (list? form)
+                             (-> form second symbol?))
+                    (name (second form)))
+        namespaced-form (when form-name (keyword (name ns-name) form-name))]
+    (->> form
+         (tree-seq coll? identity)
+         (map (partial add-parent-node-meta namespaced-form)))))
+
+(defn ^:private parser [filename]
+  (let [code (slurp filename)
+        forms (parser/code->data code filename)
+        ns-declaration (logic.namespace/find-ns-declaration forms)
+        ns-name (logic.namespace/name-from-ns-declaration ns-declaration)]
+    {:forms          (transduce (map (partial build-form-tree ns-name)) concat forms)
+     :filename       filename
+     :ns-name        ns-name
+     :ns-declaration ns-declaration}))
+
+(defn code-structure-from-clj-files-in-directory! [{:keys [scan-path ignored-paths]}]
   (let [file-sanitize (comp remove-dot-slash str)
         file-filter (create-file-filter ignored-paths)
         all-files-and-directories (list-files-in-directory file-filter scan-path)]
     (->> all-files-and-directories
          (filter clj-file?)
-         (pmap file-sanitize))))
+         (pmap file-sanitize)
+         (pmap parser))))
