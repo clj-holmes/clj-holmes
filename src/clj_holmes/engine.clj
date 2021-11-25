@@ -3,6 +3,7 @@
             [clj-holmes.output.main :as output]
             [clj-holmes.rules.engine :as rules.engine]
             [clj-holmes.rules.loader :as rules.loader]
+            [clj-holmes.usage-tree :as usage-tree]
             [progrock.core :as pr])
   (:import (java.io StringWriter)))
 
@@ -33,7 +34,7 @@
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))]
-    scans-results
+    (usage-tree/main scans-results code-structures)
     #_(output/output scans-results opts)))
 
 (defn scan [{:keys [verbose] :as opts}]
@@ -42,8 +43,8 @@
       (scan* opts))))
 
 (comment
-  (scan {:scan-path       "/home/dpr/dev/nu/common-soap/"
-         :output-file     "banana"
-         :verbose         false
-         :output-type     "stdout"
-         :rules-directory "/tmp/clj-holmes-rules"}))
+  (def result (scan {:scan-path       "/tmp/vulnerable-code"
+                     :output-file     "banana"
+                     :verbose         false
+                     :output-type     "stdout"
+                     :rules-directory "/tmp/clj-holmes-rules"})))

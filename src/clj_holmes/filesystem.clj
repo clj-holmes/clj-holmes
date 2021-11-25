@@ -40,7 +40,7 @@
   (let [form-name (when (and (list? form)
                              (-> form second symbol?))
                     (name (second form)))
-        namespaced-form (when form-name (keyword (name ns-name) form-name))]
+        namespaced-form (when form-name {:namespace (name ns-name) :reference form-name})]
     (->> form
          (tree-seq coll? identity)
          (map (partial add-parent-node-meta namespaced-form)))))
