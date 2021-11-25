@@ -33,7 +33,8 @@
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))]
-    (output/output scans-results opts)))
+    scans-results
+    #_(output/output scans-results opts)))
 
 (defn scan [{:keys [verbose] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]

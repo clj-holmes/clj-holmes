@@ -1,7 +1,7 @@
 (ns clj-holmes.filesystem
-  (:require [clojure.string :as string]
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
             [clj-holmes.logic.parser :as parser]
-            [clj-holmes.logic.namespace :as logic.namespace])
+            [clojure.string :as string])
   (:import (java.io File FileFilter)))
 
 (defn ^:private remove-dot-slash [filename]
