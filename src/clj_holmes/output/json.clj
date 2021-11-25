@@ -11,7 +11,7 @@
 
 (defn ^:private extract-fields [result]
   (let [fields-to-extract [:filename :findings :name :message]]
-    (select-keys result fields-to-extract )))
+    (select-keys result fields-to-extract)))
 
 (defn output [results output-file]
   (let [output (map extract-fields results)
