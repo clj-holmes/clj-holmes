@@ -30,7 +30,7 @@
                        :multiple true
                        :type :string
                        :as "Only use rules with specified tags to perform the scan"}]
-               :runs rules.loader/test-it!}
+               :runs rules.loader/validate-rules!}
               {:command "scan"
                :description "Performs a scan for a path"
                :opts [{:option "scan-path" :short "p"

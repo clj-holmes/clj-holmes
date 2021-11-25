@@ -7,8 +7,8 @@
             [clojure.string :as string]
             [clojure.walk :as walk]
             [shape-shifter.core :refer [*config* *wildcards* pattern->spec]])
-  (:import (java.io File)
-           (flatland.ordered.map OrderedMap)))
+  (:import (flatland.ordered.map OrderedMap)
+           (java.io File)))
 
 (defn ^:private build-custom-function [function namespace ns-declaration]
   (->> function
@@ -58,19 +58,26 @@
 
 (defn ^:private OrderedMap->Map [rule]
   (walk/postwalk (fn [object]
-                           (if (instance? OrderedMap object)
-                             (into {} object)
-                             object))
-                         rule))
+                   (if (instance? OrderedMap object)
+                     (into {} object)
+                     object))
+                 rule))
+
+(defn ^:private rule-reader [rule-path]
+  (let [read-rule (->> rule-path
+                       slurp
+                       yaml/parse-string
+                       first
+                       OrderedMap->Map)]
+    (with-meta read-rule {:rule-path (.getName rule-path)})))
 
 (defn ^:private read-rules [^String directory]
-  (let [reader (comp OrderedMap->Map first yaml/parse-string slurp)]
-    (->> directory
-         File.
-         file-seq
-         (filter is-rule?)
-         (map reader)
-         set)))
+  (->> directory
+       File.
+       file-seq
+       (filter is-rule?)
+       (map rule-reader)
+       set))
 
 (defn ^:private filter-rule-by-tags [rule-tags rules]
   (if (seq rule-tags)
@@ -86,11 +93,15 @@
        (filter-rule-by-tags rule-tags)
        (pmap prepare-rule)))
 
-(defn test-it! [{:keys [rule-tags rules-directory]}]
-  (->> rules-directory
-       read-rules
-       (filter-rule-by-tags rule-tags)
-       (run! #(s/explain ::specs.rule/rule %))))
+(defn validate-rules! [{:keys [rule-tags rules-directory]}]
+  (let [invalid-rules (->> rules-directory
+                           read-rules
+                           (filter-rule-by-tags rule-tags)
+                           (filter #((complement s/valid?) ::specs.rule/rule %)))]
+    (if (seq invalid-rules)
+      (println (format "The following rules do not conform to the spec: %s"
+                       (mapv #(-> % meta :rule-path) invalid-rules))))))
 
 (comment
-  (test-it! {:rules-directory "/tmp/clj-holmes-rules"}))
+  (init! {:rules-directory "/tmp/clj-holmes-rules"})
+  (validate-rules! {:rules-directory "/tmp/clj-holmes-rules"}))
