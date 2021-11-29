@@ -46,6 +46,5 @@
          :scan-path "/home/dpr/dev/nu/common-soap"
          :rules-directory "/tmp/clj-holmes-rules/"
          :output-file "banana.json"
-         :output-type "json"
-         })
-  )
+         :output-type "sarif"
+         }))

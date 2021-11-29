@@ -35,12 +35,13 @@
                  [org.clojars.clj-holmes/shape-shifter "0.3.6"]
                  [borkdude/edamame "0.0.11"]]
 
-  :profiles {:dev     {:global-vars {*warn-on-reflection* true
-                                     *unchecked-math*     :warn-on-boxed}
-                       :plugins     [[lein-shell "0.5.0"]]}
+  :profiles {:dev     {:global-vars  {*warn-on-reflection* true
+                                      *unchecked-math*     :warn-on-boxed}
+                       :dependencies [[org.clojure/test.check "0.9.0"]]
+                       :plugins      [[lein-shell "0.5.0"]]}
 
              :uberjar {:global-vars {*assert* false}
-                       :aot :all
+                       :aot         :all
                        :main        clj-holmes.main
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}

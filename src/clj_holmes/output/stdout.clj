@@ -7,7 +7,7 @@
         (select-keys [:filename :name :message :severity])
         (assoc :lines findings-rows))))
 
-(defn output [results output-file]
+(defn output [results]
   (let [output-data (mapv build-output-data results)]
     (pprint/print-table output-data)
-    (spit output-file (with-out-str (pprint/print-table output-data)))))
+    ))

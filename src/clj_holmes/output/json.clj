@@ -13,7 +13,7 @@
   (let [fields-to-extract [:filename :findings :name :message]]
     (select-keys result fields-to-extract)))
 
-(defn output [results output-file]
-  (let [output (map extract-fields results)
-        json-output (->json output)]
-    (spit output-file json-output)))
+(defn output [results]
+  (->> results
+       (map extract-fields)
+       ->json))
