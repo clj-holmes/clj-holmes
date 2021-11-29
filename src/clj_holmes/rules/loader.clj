@@ -10,14 +10,24 @@
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
-(defn ^:private custom-function-possibilities [function namespace ns-declaration]
+(defn ^:private custom-function-possibilities
+  "Given the following input
+  - function: read-string
+  - namespace: clojure.edn
+  - ns-declaration: (ns banana (:require [clojure.edn :as edn])
+
+ The result will be a set #{read-string, clojure.edn/read-string, edn/read-string} which contains all possibilities to
+ find the clojure.edn/read-string function in the namespace banana"
+  [function namespace ns-declaration]
   (->> function
        symbol
        (utils/function-usage-possibilities ns-declaration (symbol namespace))
        (map (fn [element] `'~element))
        set))
 
-(defn ^:private build-custom-function [pattern function namespace config]
+(defn ^:private build-custom-function
+  "Builds a function with a shape-shifter custom function wildcard"
+  [pattern function namespace config]
   (fn [form ns-declaration]
     (let [custom-function (custom-function-possibilities function namespace ns-declaration)
           spec (binding [*config* config
@@ -38,13 +48,17 @@
       (build-custom-function pattern function namespace config)
       (build-simple-function pattern config))))
 
-(defn ^:private build-condition-fn [condition]
+(defn ^:private build-condition-fn
+  "Returns a function to validate the rule patterns results."
+  [condition]
   (case condition
     :and (fn [& elements]
            (every? identity elements))
     :not not))
 
-(defn ^:private prepare-rule* [entry]
+(defn ^:private prepare-rule*
+  "Replace the :pattern and :pattern-not within the match function for the expression."
+  [entry]
   (if (and (map? entry)
            (or (:pattern entry)
                (:pattern-not entry)))
@@ -91,7 +105,7 @@
             rules)
     rules))
 
-(defn ^:private check-if-rule-is-valid [rule]
+(defn ^:private run-spec-validation [rule]
   (-> rule
       (assoc :valid? (s/valid? ::specs.rule/rule rule))
       (assoc :spec-message (s/explain-str ::specs.rule/rule rule))))
@@ -104,7 +118,7 @@
        (map rule-reader)
        set
        (filter-rule-by-tags rule-tags)
-       (map check-if-rule-is-valid)))
+       (map run-spec-validation)))
 
 (defn init! [{:keys [rule-tags rules-directory]}]
   (let [rules (read-rules rules-directory rule-tags)]
