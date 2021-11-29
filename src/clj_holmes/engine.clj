@@ -33,17 +33,9 @@
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))]
-    scans-results
-    #_(output/output scans-results opts)))
+    (output/output scans-results opts)))
 
 (defn scan [{:keys [verbose] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]
     (binding [*out* out]
       (scan* opts))))
-
-(comment
-  (scan {:scan-path       "/home/dpr/dev/nu/common-soap/"
-         :output-file     "banana"
-         :verbose         false
-         :output-type     "stdout"
-         :rules-directory "/tmp/clj-holmes-rules"}))
