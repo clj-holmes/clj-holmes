@@ -10,27 +10,33 @@
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
-(defn ^:private build-custom-function [function namespace ns-declaration]
+(defn ^:private custom-function-possibilities [function namespace ns-declaration]
   (->> function
        symbol
        (utils/function-usage-possibilities ns-declaration (symbol namespace))
        (map (fn [element] `'~element))
        set))
 
-(defn ^:private build-pattern-fn [{:keys [custom-function? interpret-regex?] :as rule-pattern}]
-  (let [pattern (or (:pattern rule-pattern) (:pattern-not rule-pattern))]
+(defn ^:private build-custom-function [pattern function namespace config]
+  (fn [form ns-declaration]
+    (let [custom-function (custom-function-possibilities function namespace ns-declaration)
+          spec (binding [*config* config
+                         *wildcards* (merge *wildcards* {"$custom-function" custom-function})]
+                 (pattern->spec pattern))]
+      (s/valid? spec form))))
+
+(defn ^:private build-simple-function [pattern config]
+  (let [spec (binding [*config* config]
+               (pattern->spec pattern))]
+    (fn [form & _]
+      (s/valid? spec form))))
+
+(defn ^:private build-pattern-fn [{:keys [custom-function? interpret-regex? function namespace] :as rule-pattern}]
+  (let [pattern (or (:pattern rule-pattern) (:pattern-not rule-pattern))
+        config (assoc *config* :interpret-regex? interpret-regex?)]
     (if custom-function?
-      (let [{:keys [function namespace]} rule-pattern]
-        (fn [form ns-declaration]
-          (let [custom-function (build-custom-function function namespace ns-declaration)
-                spec (binding [*config* (assoc *config* :interpret-regex? (boolean interpret-regex?))
-                               *wildcards* (merge *wildcards* {"$custom-function" custom-function})]
-                       (pattern->spec pattern))]
-            (s/valid? spec form))))
-      (let [spec (binding [*config* (assoc *config* :interpret-regex? interpret-regex?)]
-                   (pattern->spec pattern))]
-        (fn [form & _]
-          (s/valid? spec form))))))
+      (build-custom-function pattern function namespace config )
+      (build-simple-function pattern config))))
 
 (defn ^:private build-condition-fn [condition]
   (case condition
@@ -63,46 +69,54 @@
                      object))
                  rule))
 
-(defn ^:private rule-reader [rule-path]
+(defn ^:private rule-reader [^File rule-path]
   (let [read-rule (->> rule-path
                        slurp
                        yaml/parse-string
                        first
                        OrderedMap->Map)]
-    (with-meta read-rule {:rule-path (.getName rule-path)})))
-
-(defn ^:private read-rules [^String directory]
-  (->> directory
-       File.
-       file-seq
-       (filter is-rule?)
-       (map rule-reader)
-       set))
+    (with-meta read-rule {:rule-path (-> rule-path .getAbsoluteFile str)})))
 
 (defn ^:private filter-rule-by-tags [rule-tags rules]
   (if (seq rule-tags)
     (filter (fn [rule]
               (let [existing-rule-tags (get-in rule [:properties :tags])]
-                (boolean (some (set existing-rule-tags) rule-tags))))
+                (-> existing-rule-tags
+                    set
+                    (some rule-tags)
+                    boolean)))
             rules)
     rules))
 
-(defn init! [{:keys [rule-tags rules-directory]}]
-  (->> rules-directory
-       read-rules
+(defn ^:private check-if-rule-is-valid [rule]
+  (-> rule
+      (assoc :valid? (s/valid? ::specs.rule/rule rule))
+      (assoc :spec-message (s/explain-str ::specs.rule/rule rule))))
+
+(defn ^:private read-rules [^String directory rule-tags]
+  (->> directory
+       File.
+       file-seq
+       (filter is-rule?)
+       (map rule-reader)
+       set
        (filter-rule-by-tags rule-tags)
-       (pmap prepare-rule)))
+       (map check-if-rule-is-valid)))
+
+(defn init! [{:keys [rule-tags rules-directory]}]
+  (let [rules (read-rules rules-directory rule-tags)]
+    (->> rules
+         (filter :valid?)
+         (pmap prepare-rule))))
 
 (defn validate-rules! [{:keys [rule-tags rules-directory]}]
-  (let [invalid-rules (->> rules-directory
-                           read-rules
-                           (filter-rule-by-tags rule-tags)
-                           (filter #((complement s/valid?) ::specs.rule/rule %)))]
-    (when (seq invalid-rules)
-      (println (format "The following rules do not conform to the spec: %s"
-                       (mapv #(-> % meta :rule-path) invalid-rules)))
-      (run! #(s/explain ::specs.rule/rule %) invalid-rules)
-      false)))
+  (let [rules (read-rules rules-directory rule-tags)
+        success? (every? true? (filter (complement :valid?) rules))]
+    (run! (fn [rule]
+            (println (-> rule meta :rule-path) )
+            (println (:spec-message rule)))
+          rules)
+    success?))
 
 (comment
   (init! {:rules-directory "/tmp/clj-holmes-rules"})

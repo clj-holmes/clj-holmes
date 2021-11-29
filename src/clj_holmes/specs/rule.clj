@@ -35,5 +35,3 @@
                    ::severity
                    ::message
                    ::properties]))
-
-
