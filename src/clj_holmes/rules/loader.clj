@@ -62,7 +62,10 @@
   (and (.isFile file)
        (-> file .getName (string/ends-with? ".yml"))))
 
-(defn ^:private OrderedMap->Map [rule]
+(defn ^:private OrderedMap->Map
+  "Since yaml parse returns an ordered map it's not possible to use spec to validate the rule so it's necessary to
+  transform the rule to clojure map."
+  [rule]
   (walk/postwalk (fn [object]
                    (if (instance? OrderedMap object)
                      (into {} object)
