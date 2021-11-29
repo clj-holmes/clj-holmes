@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [cli-matic.core :as cli]
             [clj-holmes.engine :as engine]
+            [clj-holmes.rules.loader :as rules.loader]
             [clj-holmes.rules.manager :as rules.manager]))
 
 (def CONFIGURATION
@@ -19,6 +20,17 @@
                        :default "/tmp/clj-holmes-rules/"
                        :as "Directory to save rules"}]
                :runs rules.manager/fetch}
+              {:command "validate-rules"
+               :description "Validate if the rules are conform expected"
+               :opts [{:option "rules-directory" :short "d"
+                       :type :string
+                       :default "/tmp/clj-holmes-rules/"
+                       :as "Directory to read rules"}
+                      {:option "rule-tags" :short "r"
+                       :multiple true
+                       :type :string
+                       :as "Only use rules with specified tags to perform the scan"}]
+               :runs rules.loader/validate-rules!}
               {:command "scan"
                :description "Performs a scan for a path"
                :opts [{:option "scan-path" :short "p"
