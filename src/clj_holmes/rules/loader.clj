@@ -35,7 +35,7 @@
   (let [pattern (or (:pattern rule-pattern) (:pattern-not rule-pattern))
         config (assoc *config* :interpret-regex? interpret-regex?)]
     (if custom-function?
-      (build-custom-function pattern function namespace config )
+      (build-custom-function pattern function namespace config)
       (build-simple-function pattern config))))
 
 (defn ^:private build-condition-fn [condition]
@@ -113,7 +113,7 @@
   (let [rules (read-rules rules-directory rule-tags)
         success? (every? true? (filter (complement :valid?) rules))]
     (run! (fn [rule]
-            (println (-> rule meta :rule-path) )
+            (println (-> rule meta :rule-path))
             (println (:spec-message rule)))
           rules)
     success?))
