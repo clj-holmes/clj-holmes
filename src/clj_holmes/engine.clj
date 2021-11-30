@@ -33,7 +33,6 @@
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))]
-    (def scans-results scans-results)
     (output/output scans-results opts)))
 
 (defn scan [{:keys [verbose] :as opts}]
