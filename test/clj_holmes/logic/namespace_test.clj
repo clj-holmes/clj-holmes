@@ -39,3 +39,19 @@
 
   (testing "when the namespace does not exist in requires"
     (is (nil? (namespace/find-ns-in-requires '([potato :as p] [apple :as a]) 'banana)))))
+
+(deftest extract-parent-name-from-form-definition-function
+  (testing "when the form is a defn"
+    (is (= :bananas/banana
+           (namespace/extract-parent-name-from-form-definition-function '(defn banana [x] x) 'bananas))))
+
+  (testing "when the form is a defmacro"
+    (is (= :bananas/banana
+           (namespace/extract-parent-name-from-form-definition-function '(defmacro banana [x] x) 'bananas))))
+
+  (testing "when the form is a def"
+    (is (= :bananas/banana
+           (namespace/extract-parent-name-from-form-definition-function '(def banana [x] x) 'bananas))))
+
+  (testing "when the form is a anonymous function without a name"
+    (is (nil? (namespace/extract-parent-name-from-form-definition-function '(fn [x] x) 'bananas)))))

@@ -37,13 +37,10 @@
     child))
 
 (defn ^:private build-form-tree [ns-name form]
-  (let [form-name (when (and (list? form)
-                             (-> form second symbol?))
-                    (name (second form)))
-        namespaced-form (when form-name (keyword (name ns-name) form-name))]
+  (let [qualified-parent-name (logic.namespace/extract-parent-name-from-form-definition-function form ns-name)]
     (->> form
          (tree-seq coll? identity)
-         (map (partial add-parent-node-meta namespaced-form)))))
+         (map (partial add-parent-node-meta qualified-parent-name)))))
 
 (defn ^:private parser [filename]
   (let [code (slurp filename)

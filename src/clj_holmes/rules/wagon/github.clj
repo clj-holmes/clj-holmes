@@ -12,7 +12,7 @@
 (defn ^:private download-tarball [{:keys [owner project branch]}]
   (let [url (format "https://api.github.com/repos/%s%s/tarball/%s" owner project branch)
         token (System/getenv "GITHUB_TOKEN")
-        http-opts {:query-params {"access-token" token} :as :stream}]
+        http-opts {:headers {"Authorization" (str "token " token)} :as :stream}]
     (-> url (client/get http-opts) :body)))
 
 (defn ^:private extract-github-information-from-uri [^URI uri]

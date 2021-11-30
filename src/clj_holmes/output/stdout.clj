@@ -9,5 +9,4 @@
 
 (defn output [results]
   (let [output-data (mapv build-output-data results)]
-    (pprint/print-table output-data)
-    ))
+    (pprint/print-table output-data)))

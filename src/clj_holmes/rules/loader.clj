@@ -10,26 +10,13 @@
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
-(defn ^:private custom-function-possibilities
-  "Given the following input
-  - function: read-string
-  - namespace: clojure.edn
-  - ns-declaration: (ns banana (:require [clojure.edn :as edn])
-
- The result will be a set #{read-string, clojure.edn/read-string, edn/read-string} which contains all possibilities to
- find the clojure.edn/read-string function in the namespace banana"
-  [function namespace ns-declaration]
-  (->> function
-       symbol
-       (utils/function-usage-possibilities ns-declaration (symbol namespace))
-       (map (fn [element] `'~element))
-       set))
-
 (defn ^:private build-custom-function
   "Builds a function with a shape-shifter custom function wildcard"
   [pattern function namespace config]
   (fn [form ns-declaration]
-    (let [custom-function (custom-function-possibilities function namespace ns-declaration)
+    (let [function (symbol function)
+          namespace (symbol namespace)
+          custom-function (utils/function-usage-possibilities ns-declaration namespace function)
           spec (binding [*config* config
                          *wildcards* (merge *wildcards* {"$custom-function" custom-function})]
                  (pattern->spec pattern))]
