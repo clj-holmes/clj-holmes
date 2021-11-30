@@ -43,12 +43,12 @@
                        :as "Directory to read rules"}
                       {:option "output-file" :short "o"
                        :type :string
-                       :default "clj_holmes_scan_results.txt"
+                       :default "clj_holmes_scan_results.json"
                        :as "Output file"}
                       {:option "output-type" :short "t"
                        :type #{"sarif" "stdout" "json"}
                        :default "stdout"
-                       :as "Output type"}
+                       :as "Output type."}
                       {:option "rule-tags" :short "r"
                        :multiple true
                        :type :string
@@ -56,8 +56,8 @@
                       {:option "ignored-paths" :short "i"
                        :type :string
                        :as "Regex for paths and files that shouldn't be scanned"}
-                      {:option "verbose" :short "v"
-                       :type :boolean
+                      {:option "verbose"
+                       :type :with-flag
                        :default true
                        :as "Enable or disable scan process feedback."}]
                :runs engine/scan}]})

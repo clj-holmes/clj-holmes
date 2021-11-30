@@ -1,9 +1,10 @@
 (ns clj-holmes.output.main
   (:require [clj-holmes.output.json :as output.json]
             [clj-holmes.output.sarif :as output.sarif]
-            [clojure.data.json :as json]
             [clj-holmes.output.stdout :as output.stdout]
-            [clojure.pprint :as pprint]))
+            [clojure.data.json :as json]
+            [clojure.pprint :as pprint])
+  (:import (java.io OutputStreamWriter)))
 
 (defmulti output (fn [_ {:keys [output-type]}] (keyword output-type)))
 
@@ -12,9 +13,14 @@
     (spit output-file (json/write-str sarif-result))))
 
 (defmethod output :json [results {:keys [output-file]}]
-  (let [json-result (output.json/output results)]
-    (spit output-file json-result)))
+  (let [json-result (output.json/output results)
+        json-str (json/write-str json-result :value-fn (fn [_ value]
+                                                         (if (list? value)
+                                                           (str value)
+                                                           value)))]
+    (spit output-file json-str)))
 
-(defmethod output :stdout [results {:keys [output-file]}]
+(defmethod output :stdout [results _]
   (let [stdout-result (output.stdout/output results)]
-    (spit output-file (with-out-str (pprint/print-table stdout-result)))))
+    (binding [*out* (OutputStreamWriter. System/out)]
+      (pprint/print-table stdout-result))))

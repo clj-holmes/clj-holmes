@@ -40,7 +40,7 @@
   (let [qualified-parent-name (logic.namespace/extract-parent-name-from-form-definition-function form ns-name)]
     (->> form
          (tree-seq coll? identity)
-         (map (partial add-parent-node-meta qualified-parent-name)))))
+         (pmap (partial add-parent-node-meta qualified-parent-name)))))
 
 (defn ^:private parser [filename]
   (let [code (slurp filename)

@@ -37,7 +37,6 @@
 
 (s/def ::tool (s/keys :req-un [::driver]))
 
-
 (s/def ::ruleId ::non-blank-string)
 
 (s/def ::message (s/keys :req-un [::text]))
@@ -56,7 +55,6 @@
                                            ::region]))
 
 (s/def ::locations (s/coll-of (s/keys :req-un [::physicalLocation])))
-
 
 (s/def ::result (s/keys :req-un [::ruleId
                                  ::message

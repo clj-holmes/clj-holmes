@@ -1,5 +1,4 @@
-(ns clj-holmes.output.stdout
-  (:require [clojure.pprint :as pprint]))
+(ns clj-holmes.output.stdout)
 
 (defn ^:private build-output-data [{:keys [findings] :as result}]
   (let [findings-rows (mapv :row findings)]
@@ -8,5 +7,4 @@
         (assoc :lines findings-rows))))
 
 (defn output [results]
-  (let [output-data (mapv build-output-data results)]
-    (pprint/print-table output-data)))
+  (mapv build-output-data results))
