@@ -57,7 +57,7 @@
                        :type :string
                        :as "Regex for paths and files that shouldn't be scanned"}
                       {:option "verbose" :short "v"
-                       :type :boolean
+                       :type :flag
                        :default true
                        :as "Enable or disable scan process feedback."}]
                :runs engine/scan}]})
