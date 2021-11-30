@@ -8,7 +8,7 @@
 (def CONFIGURATION
   {:app {:command "clj-holmes"
          :description "run clj-holmes"
-         :version "1.0"}
+         :version (System/getProperty "clj-holmes.version")}
    :commands [{:command "fetch-rules"
                :description "Fetch rules from an external server"
                :opts [{:option "repository" :short "r"
@@ -64,3 +64,4 @@
 
 (defn -main [& args]
   (cli/run-cmd args CONFIGURATION))
+
