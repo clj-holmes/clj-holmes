@@ -1,8 +1,7 @@
-(ns clj-holmes.output.sarif
-  (:require [clojure.data.json :as json]))
+(ns clj-holmes.output.sarif)
 
 (defn ^:private result->sarif-rule [{:keys [message severity] :as rule}]
-  (let [rule (select-keys [:id :name :properties] rule)
+  (let [rule (select-keys rule [:id :name :properties])
         sarif-rule {:fullDescription      {:text message}
                     :shortDescription     {:text message}
                     :help                 {:text message}
@@ -29,8 +28,7 @@
                                             :endColumn   end-col}}}]})
         findings))
 
-(defn output [results output-file]
+(defn output [results]
   (let [sarif-boilerplate (sarif-boilerplate results)
-        sarif-results (transduce (map result->sarif-result) concat results) #_(reduce concat)
-        sarif-report (assoc-in sarif-boilerplate [:runs 0 :results] sarif-results)]
-    (spit output-file (json/write-str sarif-report))))
+        sarif-results (transduce (map result->sarif-result) concat results)]
+    (assoc-in sarif-boilerplate [:runs 0 :results] sarif-results)))

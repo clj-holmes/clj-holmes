@@ -13,16 +13,24 @@
   (and (.isFile file)
        (-> file .toString (.endsWith ".clj"))))
 
+(defn ^:private prepare-ignored-paths [ignored-paths]
+  (when ignored-paths
+    (let [ignored-paths (if (vector? ignored-paths)
+                          ignored-paths
+                          (vector ignored-paths))]
+      (map #(re-pattern %) ignored-paths))))
+
 (defn ^:private create-file-filter ^FileFilter [ignored-paths]
-  (reify FileFilter
-    (accept [_ f]
-      (if (not (seq ignored-paths))
-        true
-        (let [ignored-paths (if (vector? ignored-paths) ignored-paths (vector ignored-paths))
-              filepath (.getAbsolutePath f)]
-          (->> ignored-paths
-               (map #(-> % re-pattern (re-find filepath)))
-               (every? nil?)))))))
+  (let [ignored-paths (prepare-ignored-paths ignored-paths)]
+    (reify FileFilter
+      (accept [_ f]
+        (if (nil? ignored-paths)
+          true
+          (let [filepath (.getAbsolutePath f)]
+            (->> ignored-paths
+                 (map (fn [pattern]
+                        (re-find pattern filepath)))
+                 (every? nil?))))))))
 
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
@@ -37,13 +45,10 @@
     child))
 
 (defn ^:private build-form-tree [ns-name form]
-  (let [form-name (when (and (list? form)
-                             (-> form second symbol?))
-                    (name (second form)))
-        namespaced-form (when form-name (keyword (name ns-name) form-name))]
+  (let [qualified-parent-name (logic.namespace/extract-parent-name-from-form-definition-function form ns-name)]
     (->> form
          (tree-seq coll? identity)
-         (map (partial add-parent-node-meta namespaced-form)))))
+         (pmap (partial add-parent-node-meta qualified-parent-name)))))
 
 (defn ^:private parser [filename]
   (let [code (slurp filename)

@@ -8,7 +8,7 @@
 (def CONFIGURATION
   {:app {:command "clj-holmes"
          :description "run clj-holmes"
-         :version "1.0"}
+         :version (System/getProperty "clj-holmes.version")}
    :commands [{:command "fetch-rules"
                :description "Fetch rules from an external server"
                :opts [{:option "repository" :short "r"
@@ -43,24 +43,26 @@
                        :as "Directory to read rules"}
                       {:option "output-file" :short "o"
                        :type :string
-                       :default "clj_holmes_scan_results.txt"
+                       :default "clj_holmes_scan_results.json"
                        :as "Output file"}
                       {:option "output-type" :short "t"
                        :type #{"sarif" "stdout" "json"}
                        :default "stdout"
-                       :as "Output type"}
+                       :as "Output type."}
                       {:option "rule-tags" :short "r"
                        :multiple true
                        :type :string
                        :as "Only use rules with specified tags to perform the scan"}
                       {:option "ignored-paths" :short "i"
                        :type :string
+                       :multiple true
                        :as "Regex for paths and files that shouldn't be scanned"}
-                      {:option "verbose" :short "v"
-                       :type :flag
+                      {:option "verbose"
+                       :type :with-flag
                        :default true
                        :as "Enable or disable scan process feedback."}]
                :runs engine/scan}]})
 
 (defn -main [& args]
   (cli/run-cmd args CONFIGURATION))
+

@@ -1,4 +1,4 @@
-(defproject org.clojars.clj-holmes/clj-holmes "1.2.0"
+(defproject org.clojars.clj-holmes/clj-holmes "1.3.0"
   :description "Clojure SAST."
   :url "https://github.com/clj-holmes/clj-holmes"
   :scm {:name "git"
@@ -33,23 +33,23 @@
                  [clj-commons/clj-yaml "0.7.107"]
                  [progrock "0.1.2"]
                  [org.clojars.clj-holmes/shape-shifter "0.3.6"]
-                 [borkdude/edamame "0.0.11"]]
+                 [borkdude/edamame "0.0.15"]]
 
-  :profiles {:dev     {:global-vars {*warn-on-reflection* true
-                                     *unchecked-math*     :warn-on-boxed}
-                       :plugins     [[lein-shell "0.5.0"]]}
+  :profiles {:dev     {:global-vars  {*warn-on-reflection* true
+                                      *unchecked-math*     :warn-on-boxed}
+                       :dependencies [[org.clojure/test.check "1.1.0"]]
+                       :plugins      [[lein-shell "0.5.0"]]}
 
              :uberjar {:global-vars {*assert* false}
-                       :aot :all
+                       :aot         :all
                        :main        clj-holmes.main
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
-  :aliases {"native"     ["shell" "native-image" "--report-unsupported-elements-at-runtime"
-                          "--initialize-at-build-time"
-                          "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-                          "-H:Name=./target/${:name}" "--enable-https"]
+  :aliases {"native"          ["shell" "native-image" "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
+                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info" "--initialize-at-build-time"
+                               "--report-unsupported-elements-at-runtime" "--verbose"]
             "project-version" ["shell" "echo" "${:version}"]
-            "clj-holmes" ["run" "-m" "clj-holmes.entrypoint"]
-            "lint"       ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
-            "lint-fix"   ["do" ["cljfmt" "fix"] ["nsorg" "--replace"]]})
+            "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
+            "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
+            "lint-fix"        ["do" ["cljfmt" "fix"] ["nsorg" "--replace"]]})

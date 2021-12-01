@@ -6,16 +6,16 @@
   (:import (java.io File)
            (java.net URI)))
 
-(defn tar-decompress [filename output-directory]
+(defn ^:private tar-decompress [filename output-directory]
   (shell/sh "tar" "xf" filename "-C" output-directory))
 
-(defn download-tarball [{:keys [owner project branch]}]
+(defn ^:private download-tarball [{:keys [owner project branch]}]
   (let [url (format "https://api.github.com/repos/%s%s/tarball/%s" owner project branch)
         token (System/getenv "GITHUB_TOKEN")
-        http-opts {:query-params {"access-token" token} :as :stream}]
+        http-opts {:headers {"Authorization" (str "token " token)} :as :stream}]
     (-> url (client/get http-opts) :body)))
 
-(defn extract-github-information-from-uri [^URI uri]
+(defn ^:private extract-github-information-from-uri [^URI uri]
   {:owner   (.getAuthority uri)
    :project (.getRawPath uri)
    :branch  (or (.getFragment uri) "master")})

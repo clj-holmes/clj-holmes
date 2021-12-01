@@ -14,7 +14,7 @@
         condition-fn (:condition-fn entry)]
     (if (not (nil? check-fn))
       (let [results (filterv #(check-fn % ns-declaration) forms)
-            results-with-metadata (mapv (fn [result]
+            results-with-metadata (pmap (fn [result]
                                           (assoc (meta result) :code result)) results)]
         (-> entry
             (assoc :result (condition-fn (-> results-with-metadata seq boolean)))
@@ -46,9 +46,10 @@
 (defn ^:private execute-rule [rule forms ns-declaration]
   (walk/postwalk (partial execute-rule* forms ns-declaration) rule))
 
-(defn run [{:keys [forms ns-declaration]} rule]
+(defn run [{:keys [forms ns-declaration filename]} rule]
   (let [executed-rule (execute-rule rule forms ns-declaration)
         executed-rule-checked (check executed-rule)
         findings (extract-findings-from-rule executed-rule-checked)]
     (-> executed-rule-checked
-        (assoc :findings findings))))
+        (select-keys [:properties :name :result :id :severity :message :filename])
+        (assoc :findings findings :filename filename))))
