@@ -10,10 +10,15 @@
   (shell/sh "tar" "xf" filename "-C" output-directory))
 
 (defn ^:private download-tarball [{:keys [owner project branch]}]
-  (let [url (format "https://api.github.com/repos/%s%s/tarball/%s" owner project branch)
-        token (System/getenv "GITHUB_TOKEN")
-        http-opts {:headers {"Authorization" (str "token " token)} :as :stream}]
-    (-> url (client/get http-opts) :body)))
+  (let [token (System/getenv "GITHUB_TOKEN")
+        url (format "https://api.github.com/repos/%s%s/tarball/%s" owner project branch)]
+    (loop [opts {:headers          {"Authorization" (str "token " token)}
+                 :throw-exceptions false
+                 :as               :stream}]
+      (let [{:keys [status body]} (client/get url opts)]
+        (if (= status 200)
+          body
+          (recur (dissoc opts :headers :throw-exceptions)))))))
 
 (defn ^:private extract-github-information-from-uri [^URI uri]
   {:owner   (.getAuthority uri)
