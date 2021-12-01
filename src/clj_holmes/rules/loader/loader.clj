@@ -1,5 +1,4 @@
 (ns clj-holmes.rules.loader.loader
-  (:refer-clojure :exclude [load])
   (:require [clj-holmes.rules.loader.compose :as rules.compose]
             [clj-holmes.rules.loader.utils :as rules.utils]
             [clj-holmes.specs.rule :as specs.rule]

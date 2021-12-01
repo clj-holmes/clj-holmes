@@ -1,5 +1,6 @@
 (ns clj-holmes.rules.loader.utils-test
   (:require [clj-holmes.rules.loader.utils :as loader.utils]
+            [clj-yaml.core :as yaml]
             [clojure.test :refer :all]))
 
 (deftest function-usage-possibilities
@@ -46,6 +47,6 @@
 
 (deftest OrderedMap->Map
   (testing "when the provided input is a ordered-map"
-    (let [nested-ordered-map (clj-yaml.core/parse-string "- properties:\n    precision: medium\n    tags:\n      - correctness\n")
+    (let [nested-ordered-map (yaml/parse-string "- properties:\n    precision: medium\n    tags:\n      - correctness\n")
           expected-output [{:properties {:precision "medium", :tags ["correctness"]}}]]
       (is (= expected-output (loader.utils/OrderedMap->Map nested-ordered-map))))))
