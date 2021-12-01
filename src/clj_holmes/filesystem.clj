@@ -35,9 +35,9 @@
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
     (tree-seq
-      (fn [^File f] (. f (isDirectory)))
-      (fn [^File d] (seq (. d (listFiles file-filter))))
-      file)))
+     (fn [^File f] (. f (isDirectory)))
+     (fn [^File d] (seq (. d (listFiles file-filter))))
+     file)))
 
 (defn ^:private add-parent-node-meta [parent child]
   (if (meta child)
