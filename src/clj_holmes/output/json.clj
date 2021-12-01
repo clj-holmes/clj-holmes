@@ -6,4 +6,8 @@
 
 (defn output [results]
   (->> results
+<<<<<<< HEAD
        (mapv extract-fields)))
+=======
+       (map extract-fields)))
+>>>>>>> main

@@ -27,3 +27,4 @@
     (binding [*out* (OutputStreamWriter. System/out)]
       (pprint/print-table stdout-result)
       stdout-result)))
+

@@ -5,6 +5,7 @@ on:
     paths: 
       - 'src/**'
       - 'project.clj'
+      - '.github/workflows/release.yml'
 
 jobs:
   release:
@@ -20,7 +21,7 @@ jobs:
         uses: DeLaGuardo/setup-graalvm@master
         id: setup-graalvm
         with:
-          graalvm: 21.3.0.java11
+          graalvm-version: 21.3.0.java11
 
       - name: Install native-image component
         run: gu install native-image

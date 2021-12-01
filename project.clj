@@ -36,7 +36,13 @@
                  [org.clojars.clj-holmes/shape-shifter "0.3.6"]
                  [borkdude/edamame "0.0.15"]]
 
+<<<<<<< HEAD
   :profiles {:dev     {:dependencies [[org.clojure/test.check "1.1.0"]]
+=======
+  :profiles {:dev     {:global-vars  {*warn-on-reflection* true
+                                      *unchecked-math*     :warn-on-boxed}
+                       :dependencies [[org.clojure/test.check "1.1.0"]]
+>>>>>>> main
                        :plugins      [[lein-shell "0.5.0"]]}
 
              :uberjar {:global-vars {*assert* false}
