@@ -1,10 +1,18 @@
 (ns clj-holmes.rules.loader.utils
   (:require [clj-holmes.logic.namespace :as logic.namespace]
             [clojure.string :as string]
-            [clojure.walk :as walk])
+            [clojure.walk :as walk]
+            [flatland.ordered.map])
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
+; private
+(defn ^:private rule-tags->vector [rules-tags]
+  (if (coll? rules-tags)
+    rules-tags
+    (vector rules-tags)))
+
+; public
 (defn function-usage-possibilities
   "Given the following input
   - function: read-string
@@ -34,11 +42,6 @@
                      (into {} object)
                      object))
                  nested-ordered-map))
-
-(defn ^:private rule-tags->vector [rules-tags]
-  (if (coll? rules-tags)
-    rules-tags
-    (vector rules-tags)))
 
 (defn filter-rules-by-tags [rules rule-tags]
   (if (seq rule-tags)

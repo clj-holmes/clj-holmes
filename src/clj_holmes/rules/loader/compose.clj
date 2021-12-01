@@ -23,5 +23,5 @@
           (assoc :check-fn (rules.builder/build-pattern-fn entry))))
     entry))
 
-(defn ^:private compose-rule [rule]
+(defn compose-rule [rule]
   (walk/prewalk compose-rule* rule))

@@ -28,15 +28,15 @@
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
-                 [cheshire "5.10.1"]
                  [cli-matic "0.4.3"]
                  [org.martinklepsch/clj-http-lite "0.4.3"]
-                 [clj-commons/clj-yaml "0.7.107"]
+                 [clj-commons/clj-yaml "0.7.107" :exclusions [org.flatland/ordered]]
+                 [org.flatland/ordered "1.15.10"]
                  [progrock "0.1.2"]
                  [org.clojars.clj-holmes/shape-shifter "0.3.6"]
                  [borkdude/edamame "0.0.15"]]
 
-  :profiles {:dev     {:dependencies [[org.clojure/test.check "1.1.0"]]
+  :profiles {:dev     {:dependencies [[org.clojure/test.check "1.1.1"]]
                        :plugins      [[lein-shell "0.5.0"]]}
              :uberjar {:global-vars {*assert* false}
                        :aot         :all
@@ -45,8 +45,8 @@
                                      "-Dclojure.spec.skip-macros=true"]}}
 
   :aliases {"native"          ["shell" "native-image" "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info" "--initialize-at-build-time"
-                               "--report-unsupported-elements-at-runtime" "--verbose"]
+                               "--no-fallback" "--no-server" "-Dclj-holmes.version=${:version}" "--native-image-info"
+                               "--initialize-at-build-time" "--report-unsupported-elements-at-runtime" "--verbose"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
             "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]

@@ -2,7 +2,7 @@
   (:gen-class)
   (:require [cli-matic.core :as cli]
             [clj-holmes.engine :as engine]
-            [clj-holmes.rules.loader.main :as rules.loader]
+            [clj-holmes.rules.loader.loader :as rules.loader]
             [clj-holmes.rules.manager :as rules.manager]))
 
 (def CONFIGURATION
