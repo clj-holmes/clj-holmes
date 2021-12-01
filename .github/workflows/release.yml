@@ -5,6 +5,7 @@ on:
     paths: 
       - 'src/**'
       - 'project.clj'
+      - '.github/workflows/release.yml'
 
 jobs:
   release:
