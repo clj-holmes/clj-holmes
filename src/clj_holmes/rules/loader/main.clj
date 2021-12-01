@@ -26,7 +26,7 @@
     (->> all-files
          (filter rules.utils/is-rule?)
          (map rule-reader)
-         (filter rules.utils/filter-rules-by-tags))))
+         (filter #(rules.utils/filter-rules-by-tags % rule-tags)))))
 
 (defn init! [{:keys [rule-tags rules-directory]}]
   (let [rules (read-rules rules-directory rule-tags)]
