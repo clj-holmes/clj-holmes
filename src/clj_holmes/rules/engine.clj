@@ -14,7 +14,7 @@
         condition-fn (:condition-fn entry)]
     (if (not (nil? check-fn))
       (let [results (filterv #(check-fn % ns-declaration) forms)
-            results-with-metadata (mapv (fn [result]
+            results-with-metadata (pmap (fn [result]
                                           (assoc (meta result) :code result)) results)]
         (-> entry
             (assoc :result (condition-fn (-> results-with-metadata seq boolean)))

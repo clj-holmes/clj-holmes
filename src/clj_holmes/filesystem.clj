@@ -13,23 +13,31 @@
   (and (.isFile file)
        (-> file .toString (.endsWith ".clj"))))
 
+(defn ^:private prepare-ignored-paths [ignored-paths]
+  (when ignored-paths
+    (let [ignored-paths (if (vector? ignored-paths)
+                          ignored-paths
+                          (vector ignored-paths))]
+      (map #(re-pattern %) ignored-paths))))
+
 (defn ^:private create-file-filter ^FileFilter [ignored-paths]
-  (reify FileFilter
-    (accept [_ f]
-      (if (not (seq ignored-paths))
-        true
-        (let [ignored-paths (if (vector? ignored-paths) ignored-paths (vector ignored-paths))
-              filepath (.getAbsolutePath f)]
-          (->> ignored-paths
-               (map #(-> % re-pattern (re-find filepath)))
-               (every? nil?)))))))
+  (let [ignored-paths (prepare-ignored-paths ignored-paths)]
+    (reify FileFilter
+      (accept [_ f]
+        (if (nil? ignored-paths)
+          true
+          (let [filepath (.getAbsolutePath f)]
+            (->> ignored-paths
+                 (map (fn [pattern]
+                        (re-find pattern filepath)))
+                 (every? nil?))))))))
 
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
     (tree-seq
-     (fn [^File f] (. f (isDirectory)))
-     (fn [^File d] (seq (. d (listFiles file-filter))))
-     file)))
+      (fn [^File f] (. f (isDirectory)))
+      (fn [^File d] (seq (. d (listFiles file-filter))))
+      file)))
 
 (defn ^:private add-parent-node-meta [parent child]
   (if (meta child)

@@ -55,6 +55,7 @@
                        :as "Only use rules with specified tags to perform the scan"}
                       {:option "ignored-paths" :short "i"
                        :type :string
+                       :multiple true
                        :as "Regex for paths and files that shouldn't be scanned"}
                       {:option "verbose"
                        :type :with-flag

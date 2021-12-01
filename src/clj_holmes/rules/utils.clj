@@ -9,6 +9,7 @@
   The result will be a set #{read-string, clojure.edn/read-string, edn/read-string} which contains all possibilities to
   find the clojure.edn/read-string function in the namespace banana"
   [ns-declaration ns-to-find function]
+  ;TODO: it's one of the most expensive fn in the project
   (let [requires (-> ns-declaration logic.namespace/requires)
         namespace-alias (some-> requires
                                 (logic.namespace/find-ns-in-requires ns-to-find)
