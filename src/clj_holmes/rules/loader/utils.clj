@@ -1,7 +1,7 @@
 (ns clj-holmes.rules.loader.utils
-  (:require [clojure.walk :as walk]
+  (:require [clj-holmes.logic.namespace :as logic.namespace]
             [clojure.string :as string]
-            [clj-holmes.logic.namespace :as logic.namespace])
+            [clojure.walk :as walk])
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
@@ -44,12 +44,12 @@
   (if (seq rule-tags)
     (let [rule-tags (rule-tags->vector rule-tags)]
       (filterv (fn [rule]
-                (let [existing-rule-tags (get-in rule [:properties :tags])]
-                  (-> existing-rule-tags
-                      set
-                      (some rule-tags)
-                      boolean)))
-              rules))
+                 (let [existing-rule-tags (get-in rule [:properties :tags])]
+                   (-> existing-rule-tags
+                       set
+                       (some rule-tags)
+                       boolean)))
+               rules))
     rules))
 
 (defn is-rule? [^File file]
