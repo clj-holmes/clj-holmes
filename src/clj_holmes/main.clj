@@ -65,4 +65,3 @@
 
 (defn -main [& args]
   (cli/run-cmd args CONFIGURATION))
-
