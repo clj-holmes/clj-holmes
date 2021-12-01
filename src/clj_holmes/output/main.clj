@@ -10,7 +10,8 @@
 
 (defmethod output :sarif [results {:keys [output-file]}]
   (let [sarif-result (output.sarif/output results)]
-    (spit output-file (json/write-str sarif-result))))
+    (spit output-file (json/write-str sarif-result))
+    sarif-result))
 
 (defmethod output :json [results {:keys [output-file]}]
   (let [json-result (output.json/output results)
@@ -18,9 +19,11 @@
                                                          (if (list? value)
                                                            (str value)
                                                            value)))]
-    (spit output-file json-str)))
+    (spit output-file json-str)
+    json-result))
 
 (defmethod output :stdout [results _]
   (let [stdout-result (output.stdout/output results)]
     (binding [*out* (OutputStreamWriter. System/out)]
-      (pprint/print-table stdout-result))))
+      (pprint/print-table stdout-result)
+      stdout-result)))

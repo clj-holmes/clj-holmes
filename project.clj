@@ -28,6 +28,7 @@
                  [org.clojure/tools.namespace "1.1.0"]
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
+                 [cheshire "5.10.1"]
                  [cli-matic "0.4.3"]
                  [org.martinklepsch/clj-http-lite "0.4.3"]
                  [clj-commons/clj-yaml "0.7.107"]
@@ -35,9 +36,7 @@
                  [org.clojars.clj-holmes/shape-shifter "0.3.6"]
                  [borkdude/edamame "0.0.15"]]
 
-  :profiles {:dev     {:global-vars  {*warn-on-reflection* true
-                                      *unchecked-math*     :warn-on-boxed}
-                       :dependencies [[org.clojure/test.check "1.1.0"]]
+  :profiles {:dev     {:dependencies [[org.clojure/test.check "1.1.0"]]
                        :plugins      [[lein-shell "0.5.0"]]}
 
              :uberjar {:global-vars {*assert* false}

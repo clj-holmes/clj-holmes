@@ -2,7 +2,7 @@
   (:require [clj-holmes.filesystem :as filesystem]
             [clj-holmes.output.main :as output]
             [clj-holmes.rules.engine :as rules.engine]
-            [clj-holmes.rules.loader :as rules.loader]
+            [clj-holmes.rules.loader.main :as rules.loader]
             [progrock.core :as pr])
   (:import (java.io StringWriter)))
 
@@ -32,8 +32,9 @@
         progress-size (count-progress-size code-structures)
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
-                           (reduce concat))]
-    (output/output scans-results opts)))
+                           (reduce concat))
+        scan-result-output (output/output scans-results opts)]
+    scan-result-output))
 
 (defn scan [{:keys [verbose] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]
