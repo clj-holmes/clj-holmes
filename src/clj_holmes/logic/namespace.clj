@@ -34,10 +34,6 @@
       (->> ns-declaration
            (transduce filter-map concat)))))
 
-(defn find-ns-in-requires [requires namespace]
-  (let [is-namespace? (comp #(= namespace %) first)]
-    (first (filter is-namespace? requires))))
-
 (defn extract-parent-name-from-form-definition-function
   "Extracts the symbol name from a function definition like def, defn, defmacro and others"
   [form ns-name]

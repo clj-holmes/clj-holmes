@@ -6,10 +6,10 @@
 (defn ^:private build-custom-function
   "Builds a function with a shape-shifter custom function wildcard"
   [pattern function namespace config]
-  (fn [form ns-declaration]
+  (fn [form requires]
     (let [function (symbol function)
           namespace (symbol namespace)
-          custom-function (utils/function-usage-possibilities ns-declaration namespace function)
+          custom-function (utils/function-usage-possibilities requires namespace function)
           spec (binding [*config* config
                          *wildcards* (merge *wildcards* {"$custom-function" custom-function})]
                  (pattern->spec pattern))]

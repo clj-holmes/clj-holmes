@@ -1,6 +1,5 @@
 (ns clj-holmes.rules.loader.utils
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [clojure.walk :as walk]
             [flatland.ordered.map])
   (:import (flatland.ordered.map OrderedMap)
@@ -20,12 +19,8 @@
   - ns-declaration: (ns banana (:require [clojure.edn :as edn])
   The result will be a set #{read-string, clojure.edn/read-string, edn/read-string} which contains all possibilities to
   find the clojure.edn/read-string function in the namespace banana"
-  [ns-declaration ns-to-find function]
-  ;TODO: it's one of the most expensive fn in the project
-  (let [requires (-> ns-declaration logic.namespace/requires)
-        namespace-alias (some-> requires
-                                (logic.namespace/find-ns-in-requires ns-to-find)
-                                last)
+  [requires ns-to-find function]
+  (let [namespace-alias (ns-to-find requires)
         qualified-function-with-alias (some-> namespace-alias name (symbol (name function)))
         qualified-function (symbol (name ns-to-find) (name function))]
     (->> (conj [] function qualified-function qualified-function-with-alias)

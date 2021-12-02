@@ -10,8 +10,8 @@
        (reduce concat)
        (into [])))
 
-(defn init! [{:keys [forms ns-declaration filename]} loaded-rule]
-  (let [executed-rule (rules.runner/execute-loaded-rule loaded-rule forms ns-declaration)
+(defn init! [{:keys [forms requires filename]} loaded-rule]
+  (let [executed-rule (rules.runner/execute-loaded-rule loaded-rule forms requires)
         executed-rule-checked (rules.checker/check-executed-rule executed-rule)
         findings (extract-findings-from-rule executed-rule-checked)]
     (-> executed-rule-checked
