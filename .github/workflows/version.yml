@@ -1,0 +1,15 @@
+name: Update VERSION.md file
+on: push
+
+jobs:
+  update-version-file:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          lein project-version > VERSION.md
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "generated"
+          git push
