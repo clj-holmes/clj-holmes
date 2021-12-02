@@ -21,10 +21,12 @@
 (s/def ::function ::non-blank-string)
 (s/def ::namespace ::non-blank-string)
 (s/def ::custom-function? boolean?)
+(s/def ::interpret-regex? boolean?)
 (s/def ::pattern-definition (s/keys :req-un [(xor ::pattern ::pattern-not)]
                                     :opt-un [::function
                                              ::namespace
-                                             ::custom-function?]))
+                                             ::custom-function?
+                                             ::interpret-regex?]))
 
 (s/def ::patterns-either (s/or :definition (s/coll-of ::pattern-definition)
                                :itself (s/coll-of (s/keys :req-un [(xor ::patterns-either ::patterns)]))))
