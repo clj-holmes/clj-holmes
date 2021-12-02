@@ -2,8 +2,7 @@ name: Run tests
 
 on:
   push:
-    branches: [ main ]
-    paths: 
+    paths:
       - 'src/**'
       - 'test/**'
       - 'project.clj'
