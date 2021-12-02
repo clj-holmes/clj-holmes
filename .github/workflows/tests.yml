@@ -1,0 +1,28 @@
+name: Run tests
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'project.clj'
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: lein deps
+
+      - name: Run lint
+        run: lein lint
+
+      - name: Run tests
+        run: lein test
+
+      - name: project.clj bump check
+        run: bash scripts/version-check.sh
