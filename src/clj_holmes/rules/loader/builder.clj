@@ -4,7 +4,7 @@
             [shape-shifter.core :refer [*config* *wildcards* pattern->spec]]))
 
 (defn ^:private build-custom-function
-  "Builds a function with a shape-shifter custom function wildcard"
+  "Builds a function that will check for the presence of a pattern using a shape-shifter $custom-function wildcard."
   [pattern function namespace config]
   (fn [form requires]
     (let [function (symbol function)
