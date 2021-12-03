@@ -13,18 +13,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         gu-binary: [gu, gu]
-        version: [elf, mach-o, win.exe]
+        include: 
+          - os: ubuntu-latest
+            version: amd64
+          - os: macos-latest
+            version: darwin
         exclude:
           - os: ubuntu-latest
             gu-binary: gu.cmd
-            version: [mach-o, win.exe]
           - os: macos-latest
-            versoin: [elf, win.exe]
             gu-binary: gu.cmd
-          - os: windows-latest
-            version: [elf, mach-o]
-            gu-binary: gu
-
 
     runs-on: ${{ matrix.os }}
 
