@@ -10,7 +10,6 @@
     rules-tags
     (vector rules-tags)))
 
-; public
 (defn function-usage-possibilities
   "Given the following input
   - function: read-string
