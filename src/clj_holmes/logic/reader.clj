@@ -50,7 +50,7 @@
         (assoc :current namespace))))
 
 (defn code-str->code
-  "Receives a clojure file and returns all forms as data containing lines and rows metadata."
+  "Parses a code string and returns all of its forms as data with line and column numbers metadata."
   [code filename]
   (let [auto-resolve (auto-resolves code)
 
