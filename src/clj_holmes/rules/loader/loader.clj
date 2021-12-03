@@ -35,7 +35,7 @@
 
 (defn validate-rules! [{:keys [rule-tags rules-directory]}]
   (let [rules (read-rules rules-directory rule-tags)
-        success? (every? true? (filter (complement :valid?) rules))]
+        success? (every? true? (remove :valid? rules))]
     (run! (fn [rule]
             (println (-> rule meta :rule-path))
             (println (:spec-message rule)))

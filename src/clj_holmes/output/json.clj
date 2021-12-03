@@ -5,6 +5,5 @@
     (select-keys result fields-to-extract)))
 
 (defn output [results]
-  (->> results
-       (mapv extract-fields)))
+  (mapv extract-fields results))
 

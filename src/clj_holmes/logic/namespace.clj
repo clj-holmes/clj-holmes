@@ -31,8 +31,7 @@
 (defn requires [ns-declaration]
   (when (ns-decl? ns-declaration)
     (let [filter-map (comp (filter require-form?) (map rest) (filter is-expected-require?))]
-      (->> ns-declaration
-           (transduce filter-map concat)))))
+      (transduce filter-map concat ns-declaration))))
 
 (defn extract-parent-name-from-form-definition-function
   "Extracts the symbol name from a function definition like def, defn, defmacro and others"

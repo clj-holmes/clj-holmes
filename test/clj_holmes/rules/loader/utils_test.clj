@@ -5,19 +5,19 @@
 
 (deftest function-usage-possibilities
   (testing "when the namespace being looked up is present in requires"
-    (let [ns-declaration '(ns banana (:require [apple :as a]))]
+    (let [requires {'apple  'a}]
       (is (= #{(quote 'a/slice) (quote 'apple/slice) (quote 'slice)}
-             (loader.utils/function-usage-possibilities ns-declaration 'apple 'slice)))))
+             (loader.utils/function-usage-possibilities requires 'apple 'slice)))))
 
   (testing "when the namespace being looked up is not present in requires"
-    (let [ns-declaration '(ns banana (:require [apple :as a]))]
+    (let [requires {'apple 'a}]
       (is (= #{(quote 'slice) (quote 'avocado/slice)}
-             (loader.utils/function-usage-possibilities ns-declaration 'avocado 'slice)))))
+             (loader.utils/function-usage-possibilities requires 'avocado 'slice)))))
 
   (testing "when the there are no requires"
-    (let [ns-declaration '(ns banana)]
+    (let [requires {}]
       (is (= #{(quote 'slice) (quote 'avocado/slice)}
-             (loader.utils/function-usage-possibilities ns-declaration 'avocado 'slice))))))
+             (loader.utils/function-usage-possibilities requires 'avocado 'slice))))))
 
 (deftest filter-rule-by-tags
   (testing "when there is no tags"

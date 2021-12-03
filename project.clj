@@ -14,6 +14,8 @@
   :plugins [[lein-ancient "0.6.15"]
             [lein-cljfmt "0.6.4"]
             [lein-nsorg "0.3.0"]
+            [lein-cloverage "1.2.2"]
+            [lein-kibit "0.1.8"]
             [jonase/eastwood "0.3.10"]]
 
   :source-paths ["src/"]
@@ -50,5 +52,5 @@
                                "--diagnostics-mode"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
-            "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
-            "lint-fix"        ["do" ["cljfmt" "fix"] ["nsorg" "--replace"]]})
+            "lint"            ["do" ["cljfmt" "check"] ["kibit"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
+            "lint-fix"        ["do" ["cljfmt" "fix"] ["kibit" "--replace"] ["nsorg" "--replace"]]})

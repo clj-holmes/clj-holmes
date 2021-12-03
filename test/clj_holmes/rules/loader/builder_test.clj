@@ -49,5 +49,5 @@
                 :custom-function? true}
           pattern-fn (rules.builder/build-pattern-fn rule)
           code '(c/read-string {:required (- 1 3)})
-          code-namespace '(ns banana (:require [clojure.core :as c]))]
-      (is (pattern-fn code code-namespace)))))
+          code-requires {'clojure.core  'c}]
+      (is (pattern-fn code code-requires)))))

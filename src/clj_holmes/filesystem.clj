@@ -18,7 +18,7 @@
     (let [ignored-paths (if (vector? ignored-paths)
                           ignored-paths
                           (vector ignored-paths))]
-      (map #(re-pattern %) ignored-paths))))
+      (map re-pattern ignored-paths))))
 
 (defn ^:private create-file-filter ^FileFilter [ignored-paths]
   (let [ignored-paths (prepare-ignored-paths ignored-paths)]
@@ -35,8 +35,8 @@
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
     (tree-seq
-     (fn [^File f] (. f (isDirectory)))
-     (fn [^File d] (seq (. d (listFiles file-filter))))
+     (fn [^File f] (.isDirectory f))
+     (fn [^File d] (seq (.listFiles d file-filter)))
      file)))
 
 (defn ^:private file->code-structure [filename]

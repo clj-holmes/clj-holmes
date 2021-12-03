@@ -23,7 +23,7 @@
   (let [namespace-alias (ns-to-find requires)
         qualified-function-with-alias (some-> namespace-alias name (symbol (name function)))
         qualified-function (symbol (name ns-to-find) (name function))]
-    (->> (conj [] function qualified-function qualified-function-with-alias)
+    (->> (vector function qualified-function qualified-function-with-alias)
          (filter identity)
          (map #(identity `'~%))
          set)))
