@@ -43,6 +43,7 @@
              :uberjar {:global-vars {*assert* false}
                        :aot         :all
                        :main        clj-holmes.main
+                       :uberjar-name "clj-holmes.jar"
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
