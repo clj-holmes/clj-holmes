@@ -1,7 +1,6 @@
 name: Release
 on:
   push:
-    branches: [*]
     paths: 
       - 'src/**'
       - 'project.clj'
@@ -18,7 +17,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
 
