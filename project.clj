@@ -46,7 +46,8 @@
 
   :aliases {"native"          ["shell" "native-image" "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
                                "--no-fallback" "--no-server" "-Dclj-holmes.version=${:version}" "--native-image-info"
-                               "--initialize-at-build-time" "--report-unsupported-elements-at-runtime" "--verbose"]
+                               "--initialize-at-build-time" "--report-unsupported-elements-at-runtime" "--verbose"
+                               "--diagnostics-mode"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
             "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]

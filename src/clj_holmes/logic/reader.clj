@@ -1,7 +1,8 @@
 (ns clj-holmes.logic.reader
   (:require [clj-holmes.logic.namespace :as logic.namespace]
             [edamame.core :as edamame])
-  (:import (clojure.lang LazySeq)))
+  (:import (clojure.lang LazySeq)
+           (java.util List)))
 
 (defn ^:private alias-require? [require-declaration]
   (and (coll? require-declaration)
@@ -15,7 +16,7 @@
                               ([new] new)
                               ([new [key & value]]
                                (let [value (vec value)
-                                     alias-index (inc (.indexOf value :as))
+                                     alias-index (inc (.indexOf ^List value :as))
                                      alias (get value alias-index)]
                                  (assoc new alias key))))]
     (transduce filter-alias-require? assoc-or-return-new {} requires)))
