@@ -9,7 +9,7 @@
        (contains? (set require-declaration) :as)))
 
 (defn ^:private requires->auto-resolves-decl
-  "Adapt requires from namespace declaration to a format used by edamame auto-resolve."
+  "Adapt the require forms from the namespace declaration to a format used by edamame auto-resolve."
   [requires]
   (let [filter-alias-require? (filter alias-require?)
         assoc-or-return-new (fn assoc-or-return-new
