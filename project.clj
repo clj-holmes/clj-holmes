@@ -47,7 +47,7 @@
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
-  :aliases {"native"          ["shell" "native-image" "-jar" "./target/clj-holmes.jar}" "--initialize-at-build-time"
+  :aliases {"native"          ["shell" "native-image" "-jar" "./target/clj-holmes.jar" "--initialize-at-build-time"
                                "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info"
                                "--diagnostics-mode" "--report-unsupported-elements-at-runtime" "--verbose"
                                "--allow-incomplete-classpath"]
