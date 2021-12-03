@@ -55,12 +55,18 @@ jobs:
         run: | 
           ${{ matrix.gu-binary }} install native-image
 
+      - name: Download project dependencies
+        run: lein deps
+
+      - name: Clean target directory
+        run: lein clean
+
       - name: Generate clj-holmes uberjar
-        run: lein do deps, clean, uberjar
+        run: lein uberjar
 
       - name: Generate clj-holmes native binarty
         run: |
-          lein native -H:Name=target/clj-holmes-${{ matrix.os }}
+          lein native -H:Name=clj-holmes-${{ matrix.os }}
 
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
