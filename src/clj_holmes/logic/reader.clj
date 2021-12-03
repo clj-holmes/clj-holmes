@@ -53,9 +53,10 @@
   "Receives a clojure file and returns all forms as data containing lines and rows metadata."
   [code filename]
   (let [auto-resolve (auto-resolves code)
-        opts {:auto-resolve (fn [ns-name]
-                              (or (ns-name auto-resolve)
-                                  ns-name))
+
+        opts {:auto-resolve (fn [requested-ns]
+                              (or (requested-ns auto-resolve)
+                                  requested-ns))
               :all          true
               :readers      (fn [_] identity)}]
     (try
