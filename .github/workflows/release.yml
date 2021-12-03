@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [windows-latest]
         gu-binary: [gu, gu.cmd]
-        native-image: [native-image, %GRAALVM_HOME%\bin\native-image.cmd]
+        native-image: [native-image, "%GRAALVM_HOME%\bin\native-image.cmd"]
         include: 
           #  - os: ubuntu-latest
           #    version: linux-amd64
