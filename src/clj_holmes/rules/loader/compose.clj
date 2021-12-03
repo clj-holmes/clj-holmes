@@ -11,7 +11,7 @@
     :not not))
 
 (defn ^:private compose-rule*
-  "Replace the :pattern and :pattern-not within the match function for the expression."
+  "Adds the condition-fn that'll check for the presence or absence of a pattern based on the pattern type (e.g. :pattern or :pattern-not)."
   [entry]
   (if (and (map? entry)
            (or (:pattern entry)
