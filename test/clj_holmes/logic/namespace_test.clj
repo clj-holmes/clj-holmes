@@ -32,14 +32,6 @@
   (testing "when there is not a ns declared"
     (is (= 'user (namespace/name-from-ns-declaration '(+ 1 1))))))
 
-(deftest find-ns-in-requires
-  (testing "when the namespace exist in requires"
-    (is (= '[apple :as a]
-           (namespace/find-ns-in-requires '([potato :as p] [apple :as a]) 'apple))))
-
-  (testing "when the namespace does not exist in requires"
-    (is (nil? (namespace/find-ns-in-requires '([potato :as p] [apple :as a]) 'banana)))))
-
 (deftest extract-parent-name-from-form-definition-function
   (testing "when the form is a defn"
     (is (= :bananas/banana

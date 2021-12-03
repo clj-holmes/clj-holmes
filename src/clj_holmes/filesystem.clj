@@ -1,6 +1,6 @@
 (ns clj-holmes.filesystem
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [clj-holmes.logic.parser :as parser]
+  (:require [clj-holmes.logic.parser :as parser]
+            [clj-holmes.logic.reader :as reader]
             [clojure.string :as string])
   (:import (java.io File FileFilter)))
 
@@ -18,7 +18,7 @@
     (let [ignored-paths (if (vector? ignored-paths)
                           ignored-paths
                           (vector ignored-paths))]
-      (map #(re-pattern %) ignored-paths))))
+      (map re-pattern ignored-paths))))
 
 (defn ^:private create-file-filter ^FileFilter [ignored-paths]
   (let [ignored-paths (prepare-ignored-paths ignored-paths)]
@@ -35,30 +35,14 @@
 (defn ^:private list-files-in-directory [^FileFilter file-filter ^String scan-path]
   (let [file (File. scan-path)]
     (tree-seq
-     (fn [^File f] (. f (isDirectory)))
-     (fn [^File d] (seq (. d (listFiles file-filter))))
+     (fn [^File f] (.isDirectory f))
+     (fn [^File d] (seq (.listFiles d file-filter)))
      file)))
 
-(defn ^:private add-parent-node-meta [parent child]
-  (if (meta child)
-    (vary-meta child assoc :parent parent)
-    child))
-
-(defn ^:private build-form-tree [ns-name form]
-  (let [qualified-parent-name (logic.namespace/extract-parent-name-from-form-definition-function form ns-name)]
-    (->> form
-         (tree-seq coll? identity)
-         (pmap (partial add-parent-node-meta qualified-parent-name)))))
-
-(defn ^:private parser [filename]
-  (let [code (slurp filename)
-        forms (parser/code->data code filename)
-        ns-declaration (logic.namespace/find-ns-declaration forms)
-        ns-name (logic.namespace/name-from-ns-declaration ns-declaration)]
-    {:forms          (transduce (map (partial build-form-tree ns-name)) concat forms)
-     :filename       filename
-     :ns-name        ns-name
-     :ns-declaration ns-declaration}))
+(defn ^:private file->code-structure [filename]
+  (let [str-code (slurp filename)
+        code (reader/code-str->code str-code filename)]
+    (parser/code->code-structure code filename)))
 
 (defn code-structure-from-clj-files-in-directory! [{:keys [scan-path ignored-paths]}]
   (let [file-sanitize (comp remove-dot-slash str)
@@ -67,4 +51,4 @@
     (->> all-files-and-directories
          (filter clj-file?)
          (pmap file-sanitize)
-         (pmap parser))))
+         (pmap file->code-structure))))

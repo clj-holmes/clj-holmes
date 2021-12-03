@@ -1,40 +1,38 @@
 (ns clj-holmes.logic.parser
-  (:require [clj-holmes.logic.namespace :as logic.namespace]
-            [edamame.core :as edamame]))
+  (:require [clj-holmes.logic.namespace :as logic.namespace]))
 
-(defn ^:private alias-require? [require-declaration]
-  (->> require-declaration
-       second
-       (= :as)))
+(defn ^:private add-parent-node-meta [parent child]
+  (if (meta child)
+    (vary-meta child assoc :parent parent)
+    child))
 
-(defn ^:private requires->auto-resolves-decl
-  "Adapt requires from namespace declaration to a format used by edamame auto-resolve."
-  [requires]
-  (let [filter-alias-require? (filter alias-require?)
-        assoc-or-return-new (fn assoc-or-return-new
-                              ([new] new)
-                              ([new [value _ key]]
-                               (assoc new key value)))]
-    (transduce filter-alias-require? assoc-or-return-new {} requires)))
+(defn ^:private build-form-tree [ns-name form]
+  (let [qualified-parent-name (logic.namespace/extract-parent-name-from-form-definition-function form ns-name)]
+    (->> form
+         (tree-seq coll? identity)
+         (pmap (partial add-parent-node-meta qualified-parent-name)))))
 
-(defn ^:private auto-resolves
-  "Parses the first form and if it is a namespace declaration returns a map containing all requires aliases."
-  [code]
-  (let [form (edamame/parse-string code {:all true :readers (fn [_] identity)})
-        namespace (logic.namespace/name-from-ns-declaration form)
-        ns-requires (logic.namespace/requires form)]
-    (-> ns-requires
-        requires->auto-resolves-decl
-        (assoc :current namespace))))
+(defn ^:private parse-requires [requires-map require-entry]
+  (cond
+    (symbol? require-entry) (assoc requires-map require-entry nil)
+    (and (vector? require-entry)
+         (= :as (second require-entry))) (assoc requires-map (first require-entry) (last require-entry))
+    :else requires-map))
 
-(defn code->data
-  "Receives a clojure file and returns all forms as data containing lines and rows metadata."
-  [code filename]
-  (try
-    (let [auto-resolve (auto-resolves code)
-          opts {:auto-resolve auto-resolve
-                :all          true
-                :readers      (fn [_] identity)}]
-      (edamame/parse-string-all code opts))
-    (catch Exception _
-      (println "Impossible to parse:" filename))))
+(defn code->code-structure [forms filename]
+  (let [ns-declaration (logic.namespace/find-ns-declaration forms)
+        ns-name (logic.namespace/name-from-ns-declaration ns-declaration)
+        requires (logic.namespace/requires ns-declaration)]
+    {:forms          (transduce (map (partial build-form-tree ns-name)) concat forms)
+     :filename       filename
+     :ns-name        ns-name
+     :requires       (reduce parse-requires {} requires)
+     :ns-declaration ns-declaration}))
+
+(comment
+  (code->code-structure '[(ns banana
+                            (:require [clojure.edn :as edn]
+                                      banana.clj
+                                      [banana.jose :refer [ac]]))
+                          (defn teste [x] (edn/read-string x))]
+                        "banana.clj"))
