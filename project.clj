@@ -11,12 +11,12 @@
                                     :password :env/clojars_pass
                                     :sign-releases false}]]
 
-  :plugins [[lein-ancient "0.6.15"]
-            [lein-cljfmt "0.6.4"]
+  :plugins [[lein-ancient "0.7.0"]
+            [lein-cljfmt "0.8.0"]
             [lein-nsorg "0.3.0"]
             [lein-cloverage "1.2.2"]
             [lein-kibit "0.1.8"]
-            [jonase/eastwood "0.3.10"]]
+            [jonase/eastwood "0.9.9"]]
 
   :source-paths ["src/"]
 
