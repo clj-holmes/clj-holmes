@@ -7,10 +7,16 @@ on:
       - 'project.clj'
       - '.github/workflows/release.yml'
 
+    
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        version: [amd64, macos]
+        gu-binary: [gu, gu]
 
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
 
@@ -24,14 +30,15 @@ jobs:
           graalvm-version: 21.3.0.java11
 
       - name: Install native-image component
-        run: gu install native-image
+        run: | 
+          ${{ matrix.gu-binary }} install native-image
 
       - name: Generate clj-holmes native binarty
-        run: lein native
-      
+        run: lein native -H:Name=target/clj-holmes-${{ matrix.version }}
+
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
-          
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
