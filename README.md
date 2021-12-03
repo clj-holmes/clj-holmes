@@ -5,6 +5,9 @@
 A CLI SAST (Static application security testing) tool which was built with the intent of finding vulnerable Clojure code via rules that use a simple [pattern language](https://github.com/clj-holmes/shape-shifter). Although finding vulnerabilities is its main purpose, `clj-holmes` can also be used to find any kind of code pattern.
 
 # Installation
+Download the release for your OS (mac or linux), copy it to a directory in your `$PATH` and add executable permission to the binary.
+
+## Linux example
 ```
 curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes -o /tmp/clj-holmes
 sudo install -m 755 /tmp/clj-holmes /usr/local/bin/clj-holmes
