@@ -1,6 +1,6 @@
 (ns clj-holmes.filesystem
-  (:require [clj-holmes.logic.reader :as reader]
-            [clj-holmes.logic.parser :as parser]
+  (:require [clj-holmes.logic.parser :as parser]
+            [clj-holmes.logic.reader :as reader]
             [clojure.string :as string])
   (:import (java.io File FileFilter)))
 
