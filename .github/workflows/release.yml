@@ -67,9 +67,8 @@ jobs:
 
       - name: Generate clj-holmes native binarty
         run: |
-          ${{ matrix.native-image }} -jar ./target/clj-holmes.jar} \ 
+          ${{ matrix.native-image }} -jar ./target/clj-holmes.jar \ 
           --no-fallback \
-          -Dclj-holmes.version=${:version} \
           --native-image-info \
           --initialize-at-build-time \
           --diagnostics-mode \
