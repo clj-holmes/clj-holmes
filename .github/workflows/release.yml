@@ -14,18 +14,18 @@ jobs:
         os: [windows-latest]
         gu-binary: [gu, gu.cmd]
         include: 
-          - os: ubuntu-latest
-            version: linux-amd64
-          - os: macos-latest
-            version: darwin-amd64
+          #  - os: ubuntu-latest
+          #    version: linux-amd64
+          #  - os: macos-latest
+          #    version: darwin-amd64
           - os: windows-latest
             version: win-amd64.exe
 
         exclude:
-          - os: ubuntu-latest
-            gu-binary: gu.cmd
-          - os: macos-latest
-            gu-binary: gu.cmd
+          #- os: ubuntu-latest
+          #  gu-binary: gu.cmd
+          #- os: macos-latest
+          #  gu-binary: gu.cmd
           - os: windows-latest
             gu-binary: gu
 
