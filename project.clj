@@ -47,9 +47,10 @@
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
-  :aliases {"native"          ["shell" "native-image" "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info" "--initialize-at-build-time"
-                               "--diagnostics-mode" "--report-unsupported-elements-at-runtime" "--verbose" "--allow-incomplete-classpath"]
+  :aliases {"native"          ["shell" "native-image" "-jar" "./target/clj-holmes.jar}" "--initialize-at-build-time"
+                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info"
+                               "--diagnostics-mode" "--report-unsupported-elements-at-runtime" "--verbose"
+                               "--allow-incomplete-classpath"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
             "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]
