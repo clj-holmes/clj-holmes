@@ -40,9 +40,6 @@ jobs:
         with:
           lein: latest
 
-      - name: Generate clj-holmes uberjar
-        run: lein do deps, clean, uberjar
-
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
         id: setup-graalvm
@@ -53,14 +50,18 @@ jobs:
         run: | 
           ${{ matrix.gu-binary }} install native-image
 
+      - name: Generate clj-holmes uberjar
+        run: lein do deps, clean, uberjar
+
       - name: Generate clj-holmes native binarty
-        run: lein native -H:Name=target/clj-holmes-${{ matrix.os }}
+        run: |
+          lein native -H:Name=target/clj-holmes-${{ matrix.os }}
 
-          #- name: Retrieve version
-          #run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
+      #- name: Retrieve version
+      #run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
 
-          #- name: Release
-          #  uses: softprops/action-gh-release@v1
-          #  with:
-          #    tag_name: ${{ env.TAG_NAME }}
-          #    files: ./target/clj-holmes
+      #- name: Release
+      #  uses: softprops/action-gh-release@v1
+      #  with:
+      #    tag_name: ${{ env.TAG_NAME }}
+      #    files: ./target/clj-holmes
