@@ -2,10 +2,10 @@ name: Release
 on:
   push:
     branches: [ main ]
-    #paths: 
-    #  - 'src/**'
-    #  - 'project.clj'
-    #  - '.github/workflows/release.yml'
+    paths: 
+      - 'src/**'
+      - 'project.clj'
+      - '.github/workflows/release.yml'
 
 jobs:
   release:
@@ -67,4 +67,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.TAG_NAME }}
-          files: clj-holmes-${{ matrix-os }}
+          files: clj-holmes-${{ matrix.os }}
