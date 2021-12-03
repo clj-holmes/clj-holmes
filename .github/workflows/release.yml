@@ -13,13 +13,13 @@ jobs:
       matrix:
         os: [windows-latest]
         gu-binary: [gu, gu.cmd]
-        native-image: [native-image, "%GRAALVM_HOME%\bin\native-image.cmd"]
         include: 
           #  - os: ubuntu-latest
           #    version: linux-amd64
           #  - os: macos-latest
           #    version: darwin-amd64
           - os: windows-latest
+            native-iamge: "%GRAALVM_HOME%\bin\native-image.cmd"
             version: win-amd64.exe
 
         exclude:
@@ -28,7 +28,6 @@ jobs:
           #- os: macos-latest
           #  gu-binary: gu.cmd
           - os: windows-latest
-            native-image: native-image
             gu-binary: gu
 
     runs-on: ${{ matrix.os }}
