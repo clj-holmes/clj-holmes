@@ -1,4 +1,4 @@
-(defproject org.clojars.clj-holmes/clj-holmes "1.3.2"
+(defproject org.clojars.clj-holmes/clj-holmes "1.3.3"
   :description "Clojure SAST."
   :url "https://github.com/clj-holmes/clj-holmes"
   :scm {:name "git"
@@ -43,12 +43,14 @@
              :uberjar {:global-vars {*assert* false}
                        :aot         :all
                        :main        clj-holmes.main
+                       :uberjar-name "clj-holmes.jar"
                        :jvm-opts    ["-Dclojure.compiler.direct-linking=true"
                                      "-Dclojure.spec.skip-macros=true"]}}
 
-  :aliases {"native"          ["shell" "native-image" "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info" "--initialize-at-build-time"
-                               "--report-unsupported-elements-at-runtime" "--verbose"]
+  :aliases {"native"          ["shell" "native-image" "-jar" "./target/clj-holmes.jar" "--initialize-at-build-time"
+                               "--no-fallback" "-Dclj-holmes.version=${:version}" "--native-image-info"
+                               "--diagnostics-mode" "--report-unsupported-elements-at-runtime" "--verbose"
+                               "--allow-incomplete-classpath"]
             "project-version" ["shell" "echo" "${:version}"]
             "clj-holmes"      ["run" "-m" "clj-holmes.entrypoint"]
             "lint"            ["do" ["cljfmt" "check"] ["nsorg"] ["eastwood" "{:namespaces [:source-paths]}"]]

@@ -7,15 +7,36 @@ on:
       - 'project.clj'
       - '.github/workflows/release.yml'
 
+    
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        gu-binary: [gu]
+        include: 
+          - os: ubuntu-latest
+            native-image: native-image
+            version: linux-amd64
+          - os: macos-latest
+            native-image: native-image
+            version: darwin-amd64
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Prepare java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
-      - name: Generate clj-holmes uberjar
-        run: lein do deps, clean, uberjar
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.6
+        with:
+          lein: latest
 
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
@@ -24,16 +45,27 @@ jobs:
           graalvm-version: 21.3.0.java11
 
       - name: Install native-image component
-        run: gu install native-image
+        run: | 
+          ${{ matrix.gu-binary }} install native-image
+
+      - name: Download project dependencies
+        run: lein deps
+
+      - name: Clean target directory
+        run: lein clean
+
+      - name: Generate clj-holmes uberjar
+        run: lein uberjar
 
       - name: Generate clj-holmes native binarty
-        run: lein native
-      
+        run: |
+          lein native -H:Name=clj-holmes-${{ matrix.os }}
+
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
-          
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.TAG_NAME }}
-          files: ./target/clj-holmes
+          files: clj-holmes-${{ matrix-os }}
