@@ -12,13 +12,23 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        version: [amd64, macos]
         gu-binary: [gu, gu]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Prepare java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.6
+        with:
+          lein: latest
 
       - name: Generate clj-holmes uberjar
         run: lein do deps, clean, uberjar
@@ -34,7 +44,7 @@ jobs:
           ${{ matrix.gu-binary }} install native-image
 
       - name: Generate clj-holmes native binarty
-        run: lein native -H:Name=target/clj-holmes-${{ matrix.version }}
+        run: lein native -H:Name=target/clj-holmes-${{ matrix.os }}
 
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
