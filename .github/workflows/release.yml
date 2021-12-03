@@ -13,6 +13,18 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         gu-binary: [gu, gu]
+        version: [elf, mach-o, win.exe]
+        exclude:
+          - os: ubuntu-latest
+            gu-binary: gu.cmd
+            version: [mach-o, win.exe]
+          - os: macos-latest
+            versoin: [elf, win.exe]
+            gu-binary: gu.cmd
+          - os: windows-latest
+            version: [elf, mach-o]
+            gu-binary: gu
+
 
     runs-on: ${{ matrix.os }}
 
@@ -46,8 +58,8 @@ jobs:
       - name: Generate clj-holmes native binarty
         run: lein native -H:Name=target/clj-holmes-${{ matrix.os }}
 
-      - name: Retrieve version
-        run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
+          #- name: Retrieve version
+          #run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
 
           #- name: Release
           #  uses: softprops/action-gh-release@v1
