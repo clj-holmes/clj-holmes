@@ -11,7 +11,7 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest, macos-latest]
         gu-binary: [gu, gu.cmd]
         include: 
           - os: ubuntu-latest
@@ -20,12 +20,6 @@ jobs:
           - os: macos-latest
             native-image: native-image
             version: darwin-amd64
-          
-        exclude:
-          - os: ubuntu-latest
-            gu-binary: gu.cmd
-          - os: macos-latest
-            gu-binary: gu.cmd
 
     runs-on: ${{ matrix.os }}
 
@@ -36,7 +30,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
 
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@3.6
