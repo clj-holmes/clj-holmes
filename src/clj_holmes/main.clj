@@ -56,9 +56,6 @@
                              {:option "ignored-paths" :short "i"
                               :type   :string
                               :as     "Regex for paths and files that shouldn't be scanned"}
-                             {:option "expected-output"
-                              :type   :string
-                              :as     "Expected output given a rule and a project."}
                              {:option  "verbose" :short "v"
                               :type    :with-flag
                               :default true
