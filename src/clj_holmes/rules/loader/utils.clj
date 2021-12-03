@@ -5,7 +5,6 @@
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
-; private
 (defn ^:private rule-tags->vector [rules-tags]
   (if (coll? rules-tags)
     rules-tags
