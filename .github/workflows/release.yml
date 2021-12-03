@@ -1,7 +1,7 @@
 name: Release
 on:
   push:
-    branches: [ main ]
+    branches: [*]
     paths: 
       - 'src/**'
       - 'project.clj'
@@ -15,6 +15,8 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         version: [amd64, macos]
         gu-binary: [gu, gu]
+
+    runs-on: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,8 +41,8 @@ jobs:
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.TAG_NAME }}
-          files: ./target/clj-holmes
+          #- name: Release
+          #  uses: softprops/action-gh-release@v1
+          #  with:
+          #    tag_name: ${{ env.TAG_NAME }}
+          #    files: ./target/clj-holmes
