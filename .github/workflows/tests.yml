@@ -1,11 +1,6 @@
 name: Run tests
 
-on:
-  push:
-    paths:
-      - 'src/**'
-      - 'test/**'
-      - 'project.clj'
+on: push
 
 jobs:
   test:
