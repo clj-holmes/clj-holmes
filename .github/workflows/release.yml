@@ -28,6 +28,7 @@ jobs:
           #- os: macos-latest
           #  gu-binary: gu.cmd
           - os: windows-latest
+            native-image: native-image
             gu-binary: gu
 
     runs-on: ${{ matrix.os }}
