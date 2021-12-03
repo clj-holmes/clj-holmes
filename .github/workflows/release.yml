@@ -14,10 +14,12 @@ jobs:
         os: [windows-latest]
         gu-binary: [gu, gu.cmd]
         include: 
-          #  - os: ubuntu-latest
-          #    version: linux-amd64
-          #  - os: macos-latest
-          #    version: darwin-amd64
+          #- os: ubuntu-latest
+          #   native-image: native-image
+          #   version: linux-amd64
+          # - os: macos-latest
+          #   native-image:native-image
+          #   version: darwin-amd64
           - os: windows-latest
             native-iamge: "%GRAALVM_HOME%\bin\native-image.cmd"
             version: win-amd64.exe
@@ -67,15 +69,7 @@ jobs:
 
       - name: Generate clj-holmes native binarty
         run: |
-          ${{ matrix.native-image }} -jar ./target/clj-holmes.jar \ 
-          --no-fallback \
-          --native-image-info \
-          --initialize-at-build-time \
-          --diagnostics-mode \
-          --report-unsupported-elements-at-runtime \
-          --verbose \
-          --allow-incomplete-classpath
-          -H:Name=clj-holmes-${{ matrix.os }}
+          ${{ matrix.native-image }} -jar ./target/clj-holmes.jar --no-fallback --native-image-info --initialize-at-build-time --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
 
       - name: Retrieve version
         run: echo "TAG_NAME=v$(lein project-version)" >> $GITHUB_ENV
