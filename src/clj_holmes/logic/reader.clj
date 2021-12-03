@@ -52,11 +52,13 @@
 (defn code-str->code
   "Receives a clojure file and returns all forms as data containing lines and rows metadata."
   [code filename]
-  (try
-    (let [auto-resolve (auto-resolves code)
-          opts {:auto-resolve auto-resolve
-                :all          true
-                :readers      (fn [_] identity)}]
-      (edamame/parse-string-all code opts))
-    (catch Exception _
-      (println "Impossible to parse:" filename))))
+  (let [auto-resolve (auto-resolves code)
+        opts {:auto-resolve (fn [namespace]
+                              (or (namespace auto-resolve)
+                                  namespace))
+              :all          true
+              :readers      (fn [_] identity)}]
+    (try
+      (edamame/parse-string-all code opts)
+      (catch Exception _
+        (println "Impossible to parse:" filename)))))
