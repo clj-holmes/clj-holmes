@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        gu-binary: [gu, gu.cmd]
+        gu-binary: [gu]
         include: 
           - os: ubuntu-latest
             native-image: native-image
