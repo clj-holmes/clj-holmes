@@ -65,6 +65,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
         with:
           tag_name: ${{ env.TAG_NAME }}
           files: clj-holmes-${{ matrix.os }}
