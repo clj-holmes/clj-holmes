@@ -6,4 +6,3 @@
 
 (defn output [results]
   (mapv extract-fields results))
-
