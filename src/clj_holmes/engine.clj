@@ -1,5 +1,5 @@
 (ns clj-holmes.engine
-  (:require [clj-holmes.filesystem :as filesystem]
+  (:require [clj-holmes.diplomat.code-reader :as diplomat.code-reader]
             [clj-holmes.logic.progress :as progress]
             [clj-holmes.output.main :as output]
             [clj-holmes.rules.loader.loader :as rules.loader]
@@ -14,7 +14,7 @@
     result))
 
 (defn scan* [opts]
-  (let [code-structures (filesystem/code-structure-from-clj-files-in-directory! opts)
+  (let [code-structures (diplomat.code-reader/code-structure-from-clj-files-in-directory! opts)
         rules (rules.loader/init! opts)
         progress-size (progress/count-progress-size code-structures)
         scans-results (->> code-structures
