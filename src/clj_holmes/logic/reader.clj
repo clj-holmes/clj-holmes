@@ -52,14 +52,14 @@
 (defn code-str->code
   "Parses a code string and returns all of its forms as data with line and column numbers metadata."
   [code filename]
-  (let [auto-resolve (auto-resolves code)
+  (try
+    (let [auto-resolve (auto-resolves code)
 
-        opts {:auto-resolve (fn [requested-ns]
-                              (or (requested-ns auto-resolve)
-                                  requested-ns))
-              :all          true
-              :readers      (fn [_] identity)}]
-    (try
-      (edamame/parse-string-all code opts)
-      (catch Exception _
-        (println "Impossible to parse:" filename)))))
+          opts {:auto-resolve (fn [requested-ns]
+                                (or (requested-ns auto-resolve)
+                                    requested-ns))
+                :all          true
+                :readers      (fn [_] identity)}]
+      (edamame/parse-string-all code opts))
+    (catch Exception _
+      (println "Impossible to parse:" filename))))
