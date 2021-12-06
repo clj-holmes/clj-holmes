@@ -60,6 +60,6 @@
                                     requested-ns))
                 :all          true
                 :readers      (fn [_] identity)}]
-      (edamame/parse-string-all code opts)
-      (catch Exception _
-        (println "Impossible to parse:" filename)))))
+      (edamame/parse-string-all code opts))
+    (catch Exception _
+      (println "Impossible to parse:" filename))))
