@@ -61,7 +61,7 @@
                                  ::locations]))
 (s/def ::results (s/coll-of ::result))
 
-(s/def ::$schema #{"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"})
+(s/def ::$schema #{"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Documents/CommitteeSpecifications/2.1.0/sarif-schema-2.1.0.json"})
 (s/def ::version #{"2.1.0"})
 (s/def ::runs (s/coll-of (s/keys :req-un [::tool
                                           ::results])))
