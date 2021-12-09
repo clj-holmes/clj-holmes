@@ -1,4 +1,4 @@
-(ns clj-holmes.filesystem
+(ns clj-holmes.diplomat.code-reader
   (:require [clj-holmes.logic.parser :as parser]
             [clj-holmes.logic.reader :as reader]
             [clojure.string :as string])

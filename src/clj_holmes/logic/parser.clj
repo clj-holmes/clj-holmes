@@ -12,27 +12,27 @@
          (tree-seq coll? identity)
          (pmap (partial add-parent-node-meta qualified-parent-name)))))
 
-(defn ^:private parse-requires [requires-map require-entry]
-  (cond
-    (symbol? require-entry) (assoc requires-map require-entry nil)
-    (and (vector? require-entry)
-         (= :as (second require-entry))) (assoc requires-map (first require-entry) (last require-entry))
-    :else requires-map))
+(defn parse [require-entry]
+  (when (vector? require-entry)
+    (let [namespace (first require-entry)
+          require-rest (rest require-entry)]
+      (assoc {} namespace (apply hash-map require-rest)))))
 
 (defn code->code-structure [forms filename]
   (let [ns-declaration (logic.namespace/find-ns-declaration forms)
         ns-name (logic.namespace/name-from-ns-declaration ns-declaration)
-        requires (logic.namespace/requires ns-declaration)]
+        requires (-> ns-declaration logic.namespace/requires logic.namespace/normalize-requires)]
     {:forms          (transduce (map (partial build-form-tree ns-name)) concat forms)
      :filename       filename
      :ns-name        ns-name
-     :requires       (reduce parse-requires {} requires)
+     :requires       (transduce (map parse) merge requires)
      :ns-declaration ns-declaration}))
 
 (comment
   (code->code-structure '[(ns banana
                             (:require [clojure.edn :as edn]
                                       banana.clj
-                                      [banana.jose :refer [ac]]))
+                                      [banana [jud.client] [jud.pj]]
+                                      [banana.jose :refer [ac] :as j]))
                           (defn teste [x] (edn/read-string x))]
                         "banana.clj"))

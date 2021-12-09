@@ -18,10 +18,11 @@
   The result will be a set #{read-string, clojure.edn/read-string, edn/read-string} which contains all possibilities to
   find the clojure.edn/read-string function in the namespace banana"
   [requires ns-to-find function]
-  (let [namespace-alias (ns-to-find requires)
+  (let [namespace-alias (-> requires ns-to-find :as)
+        referer (function (-> requires ns-to-find :refer set))
         qualified-function-with-alias (some-> namespace-alias name (symbol (name function)))
         qualified-function (symbol (name ns-to-find) (name function))]
-    (->> (vector function qualified-function qualified-function-with-alias)
+    (->> (vector referer qualified-function qualified-function-with-alias)
          (filter identity)
          (map #(identity `'~%))
          set)))

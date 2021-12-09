@@ -15,11 +15,11 @@
 
 (defmethod output :json [results {:keys [output-file]}]
   (let [json-result (output.json/output results)
-        json-str (json/write-str json-result :value-fn (fn [_ value]
-                                                         (cond
-                                                           (list? value) (str value)
-                                                           (qualified-keyword? value) (subs (str value) 1)
-                                                           :else value)))]
+        json-str (json/write-str json-result :value-fn (fn [key value]
+                                                         (case key
+                                                           :code (str value)
+                                                           :parent (subs (str value) 1)
+                                                           value)))]
     (spit output-file json-str)
     json-result))
 

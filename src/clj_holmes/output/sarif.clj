@@ -9,7 +9,7 @@
     (merge rule sarif-rule)))
 
 (defn ^:private sarif-boilerplate [results]
-  {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
+  {:$schema "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Documents/CommitteeSpecifications/2.1.0/sarif-schema-2.1.0.json"
    :version "2.1.0"
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
