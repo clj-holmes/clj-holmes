@@ -31,7 +31,15 @@
                 :function "read-string"
                 :custom-function? true}
           pattern-fn (rules.builder/build-pattern-fn rule)]
-      (is (pattern-fn '(read-string "banana") '(ns banana)))))
+      (is (pattern-fn '(clojure.core/read-string "banana") nil))))
+
+  (testing "when it is a custom pattern with a refer in requires"
+    (let [rule {:pattern "($custom-function \"banana\")"
+                :namespace "clojure.core"
+                :function "read-string"
+                :custom-function? true}
+          pattern-fn (rules.builder/build-pattern-fn rule)]
+      (is (pattern-fn '(read-string "banana") '{clojure.core {:refer [read-string]}}))))
 
   (testing "when it is a custom pattern but it does not match the input"
     (let [rule {:pattern "($custom-function \"banana\")"
@@ -49,5 +57,5 @@
                 :custom-function? true}
           pattern-fn (rules.builder/build-pattern-fn rule)
           code '(c/read-string {:required (- 1 3)})
-          code-requires {'clojure.core  'c}]
+          code-requires {'clojure.core {:as 'c}}]
       (is (pattern-fn code code-requires)))))

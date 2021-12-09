@@ -5,18 +5,23 @@
 
 (deftest function-usage-possibilities
   (testing "when the namespace being looked up is present in requires"
-    (let [requires {'apple  'a}]
-      (is (= #{(quote 'a/slice) (quote 'apple/slice) (quote 'slice)}
+    (let [requires {'apple {:as 'a}}]
+      (is (= #{(quote 'a/slice) (quote 'apple/slice)}
              (loader.utils/function-usage-possibilities requires 'apple 'slice)))))
 
   (testing "when the namespace being looked up is not present in requires"
     (let [requires {'apple 'a}]
-      (is (= #{(quote 'slice) (quote 'avocado/slice)}
+      (is (= #{(quote 'avocado/slice)}
+             (loader.utils/function-usage-possibilities requires 'avocado 'slice)))))
+
+  (testing "when the there is a namespace and refer to the looked function"
+    (let [requires '{avocado {:as v :refer [slice]}}]
+      (is (= #{(quote 'slice) (quote 'v/slice) (quote 'avocado/slice)}
              (loader.utils/function-usage-possibilities requires 'avocado 'slice)))))
 
   (testing "when the there are no requires"
     (let [requires {}]
-      (is (= #{(quote 'slice) (quote 'avocado/slice)}
+      (is (= #{(quote 'avocado/slice)}
              (loader.utils/function-usage-possibilities requires 'avocado 'slice))))))
 
 (deftest filter-rule-by-tags
