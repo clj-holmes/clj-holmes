@@ -6,3 +6,5 @@ target/
 pom.xml
 .lein-failures
 reports/
+.lsp/.cache
+.clj-kondo/.cache

@@ -1,6 +1,7 @@
 (ns clj-holmes.engine
   (:require [clj-holmes.diplomat.code-reader :as diplomat.code-reader]
             [clj-holmes.logic.progress :as progress]
+            [clj-holmes.logic.result :as result]
             [clj-holmes.output.main :as output]
             [clj-holmes.rules.loader.loader :as rules.loader]
             [clj-holmes.rules.processor.processor :as rules.processor])
@@ -20,7 +21,8 @@
         scans-results (->> code-structures
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))
-        scan-result-output (output/output scans-results opts)]
+        has-errors (result/has-errors? scans-results)
+        scan-result-output (output/output scans-results (assoc opts :has-errors has-errors))]
     scan-result-output))
 
 (defn scan [{:keys [verbose] :as opts}]

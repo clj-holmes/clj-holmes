@@ -23,8 +23,10 @@
     (spit output-file json-str)
     json-result))
 
-(defmethod output :stdout [results _]
+(defmethod output :stdout [results {:keys [has-errors]}]
   (let [stdout-result (output.stdout/output results)]
-    (binding [*out* (OutputStreamWriter. System/out)]
+    (binding [*out* (if has-errors
+                      (OutputStreamWriter. System/err)
+                      (OutputStreamWriter. System/out))]
       (pprint/print-table stdout-result)
       stdout-result)))
