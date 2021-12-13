@@ -32,22 +32,3 @@
 
 (defn compose-rule [rule]
   (walk/postwalk compose-rule* rule))
-
-(comment
-  (def rule {:properties   {:precision "medium", :tags ["xxe" "security" "vulnerability"]},
-             :valid?       true,
-             :spec-message "Success!\n",
-             :patterns     [{:patterns [{:pattern-not "(defn $& parse $& [$&] $&)"}]}
-                            {:patterns [{:function         "parse",
-                                         :namespace        "clojure.xml",
-                                         :custom-function? true,
-                                         :pattern          "($& $custom-function $&)"}]}
-                            {:patterns-either [{:pattern-not "(.setFeature \"http://apache.org/xml/features/disallow-doctype-decl\" true)"}
-                                               {:pattern-not "(.setFeature \"http://xml.org/sax/features/external-general-entities\" false)"}
-                                               {:pattern-not "(.setFeature \"http://xml.org/sax/features/external-parameter-entities\" false)"}]}],
-             :name         "Clojure xml XXE",
-             :id           "xxe-clojure-xml",
-             :severity     "error",
-             :message      "Usage of clojure xml parse"})
-
-  (-> (compose-rule rule) :patterns first :patterns first :check-fn meta))
