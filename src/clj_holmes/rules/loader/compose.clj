@@ -8,7 +8,7 @@
   [entry]
   (let [condition-fn (if (:pattern entry) identity not)
         check-function (rules.builder/build-pattern-fn entry)]
-    (with-meta (comp condition-fn check-function) entry)))
+    (comp condition-fn check-function)))
 
 (defn ^:private condition-fn-from-entry [entry]
   (if (:patterns-either entry)
