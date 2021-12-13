@@ -21,9 +21,16 @@
                            (pmap #(check-rules-in-code-structure % rules progress-size))
                            (reduce concat))
         scan-result-output (output/output scans-results opts)]
-    scan-result-output))
+    scans-results))
 
 (defn scan [{:keys [verbose] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]
     (binding [*out* out]
       (scan* opts))))
+
+(comment
+  (scan* {:verbose false
+          :scan-path "/home/dpr/dev/clj-holmes/clj-holmes-rules/security/xxe-clojure-xml"
+          :rules-directory "/home/dpr/dev/clj-holmes/clj-holmes-rules/security/xxe-clojure-xml"
+          :output-type "stdout"})
+  )
