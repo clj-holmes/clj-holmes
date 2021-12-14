@@ -44,8 +44,3 @@
             (println (:spec-message rule)))
           rules)
     success?))
-
-(comment
-  (init! {:rules-directory "/home/dpr/dev/clj-holmes/clj-holmes-rules"
-          :rule-severity   "warning"})
-  (validate-rules! {:rules-directory "/tmp/clj-holmes-rules"}))
