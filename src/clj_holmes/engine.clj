@@ -23,7 +23,9 @@
         scan-result-output (output/output scans-results opts)]
     scan-result-output))
 
-(defn scan [{:keys [verbose] :as opts}]
+(defn scan [{:keys [verbose fail-on-result] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]
     (binding [*out* out]
-      (scan* opts))))
+      (let [result (scan* opts)]
+        (when fail-on-result
+          (count result))))))

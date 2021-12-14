@@ -5,10 +5,16 @@
   (:import (flatland.ordered.map OrderedMap)
            (java.io File)))
 
-(defn ^:private rule-tags->vector [rules-tags]
+(defn ^:private rule-filter->vector [rules-tags]
   (if (coll? rules-tags)
     rules-tags
     (vector rules-tags)))
+
+(defn ^:private fetch-rule-property [rule location]
+  (let [property (get-in rule location)]
+    (if (coll? property)
+      property
+      (vector property))))
 
 (defn function-usage-possibilities
   "Given the following input
@@ -37,16 +43,15 @@
                      object))
                  nested-ordered-map))
 
-(defn filter-rules-by-tags [rules rule-tags]
-  (if (seq rule-tags)
-    (let [rule-tags (rule-tags->vector rule-tags)]
-      (filterv (fn [rule]
-                 (let [existing-rule-tags (get-in rule [:properties :tags])]
-                   (-> existing-rule-tags
-                       set
-                       (some rule-tags)
-                       boolean)))
-               rules))
+(defn filter-rules-by-location [rules rule-filter location]
+  (if (seq rule-filter)
+    (filterv (fn [rule]
+               (let [rule-properties (fetch-rule-property rule location)]
+                 (-> rule-properties
+                     set
+                     (some rule-filter)
+                     boolean)))
+             rules)
     rules))
 
 (defn is-rule? [^File file]

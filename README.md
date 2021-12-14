@@ -50,6 +50,7 @@ It's also possible to provide another source for a rule set by adding the `-r` o
 
 # Scanning a Project
 ```
+
 NAME:
  clj-holmes scan - Performs a scan for a path
 
@@ -57,12 +58,16 @@ USAGE:
  clj-holmes scan [command options] [arguments...]
 
 OPTIONS:
-   -p, --scan-path S*                                           Path to scan
-   -d, --rules-directory S         /tmp/clj-holmes-rules/       Directory to read rules
-   -o, --output-file S             clj_holmes_scan_results.txt  Output file
-   -t, --output-type sarif|stdout  stdout                       Output type
-   -r, --rule-tags S                                            Only use rules with specified tags to perform the scan
-   -i, --ignored-paths S                                        Glob for paths and files that shouldn't be scanned
+   -p, --scan-path S*                                                Path to scan
+   -d, --rules-directory S              /tmp/clj-holmes-rules/       Directory to read rules
+   -o, --output-file S                  clj_holmes_scan_results.txt  Output file
+   -t, --output-type json|sarif|stdout  stdout                       Output type
+   -T, --rule-tags S                                                 Only use rules with specified tags to perform the scan
+   -S, --rule-severity S                                             Only use rules with specified severity to perform the scan
+   -P, --rule-precision S                                            Only use rules with specified precision to perform the scan
+   -i, --ignored-paths S                                             Regex for paths and files that shouldn't be scanned
+   -f, --[no-]fail-on-result                                         Enable or disable fail if results were found (useful for CI/CD)
+   -v, --[no-]verbose                                                Enable or disable scan process feedback.
    -?, --help
 ```
 
