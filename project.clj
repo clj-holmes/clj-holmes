@@ -1,4 +1,4 @@
-(defproject org.clojars.clj-holmes/clj-holmes "1.3.8"
+(defproject org.clojars.clj-holmes/clj-holmes "1.4.0"
   :description "Clojure SAST."
   :url "https://github.com/clj-holmes/clj-holmes"
   :scm {:name "git"
@@ -28,7 +28,6 @@
 
   :dependencies [[org.clojure/clojure "1.10.2-alpha1"]
                  [org.clojure/tools.namespace "1.1.0"]
-                 [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.json "2.4.0"]
                  [cli-matic "0.4.3"]
                  [org.martinklepsch/clj-http-lite "0.4.3"]

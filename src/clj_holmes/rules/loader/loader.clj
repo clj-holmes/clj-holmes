@@ -20,28 +20,27 @@
       (run-spec-validation)
       (with-meta {:rule-path (-> rule-path .getAbsoluteFile str)})))
 
-(defn ^:private read-rules [^String directory rule-tags]
-  (let [all-files (-> directory File. file-seq)]
-    (->> all-files
-         (filter rules.utils/is-rule?)
-         (map rule-reader)
-         (filter #(rules.utils/filter-rules-by-tags % rule-tags)))))
+(defn ^:private read-rules [^String directory rule-tags rule-severity rule-precision]
+  (let [all-files (-> directory File. file-seq)
+        rules (->> all-files
+                   (filter rules.utils/is-rule?)
+                   (map rule-reader))]
+    (-> rules
+        (rules.utils/filter-rules-by-location rule-tags [:properties :tags])
+        (rules.utils/filter-rules-by-location rule-precision [:properties :precision])
+        (rules.utils/filter-rules-by-location rule-severity [:severity]))))
 
-(defn init! [{:keys [rule-tags rules-directory]}]
-  (let [rules (read-rules rules-directory rule-tags)]
+(defn init! [{:keys [rule-tags rule-severity rule-precision rules-directory]}]
+  (let [rules (read-rules rules-directory rule-tags rule-severity rule-precision)]
     (->> rules
          (filter :valid?)
          (pmap rules.compose/compose-rule))))
 
-(defn validate-rules! [{:keys [rule-tags rules-directory]}]
-  (let [rules (read-rules rules-directory rule-tags)
+(defn validate-rules! [{:keys [rule-tags rule-severity rule-precision rules-directory]}]
+  (let [rules (read-rules rules-directory rule-tags rule-severity rule-precision)
         success? (every? true? (remove :valid? rules))]
     (run! (fn [rule]
             (println (-> rule meta :rule-path))
             (println (:spec-message rule)))
           rules)
     success?))
-
-(comment
-  (init! {:rules-directory "/tmp/clj-holmes-rules"})
-  (validate-rules! {:rules-directory "/tmp/clj-holmes-rules"}))

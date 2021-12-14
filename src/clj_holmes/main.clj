@@ -49,14 +49,26 @@
                               :type    #{"sarif" "stdout" "json"}
                               :default "stdout"
                               :as      "Output type"}
-                             {:option   "rule-tags" :short "r"
+                             {:option   "rule-tags" :short "T"
                               :multiple true
                               :type     :string
                               :as       "Only use rules with specified tags to perform the scan"}
+                             {:option   "rule-severity" :short "S"
+                              :multiple true
+                              :type     :string
+                              :as       "Only use rules with specified severity to perform the scan"}
+                             {:option   "rule-precision" :short "P"
+                              :multiple true
+                              :type     :string
+                              :as       "Only use rules with specified precision to perform the scan"}
                              {:option   "ignored-paths" :short "i"
                               :type     :string
                               :multiple true
                               :as       "Regex for paths and files that shouldn't be scanned"}
+                             {:option  "fail-on-result" :short "f"
+                              :type    :with-flag
+                              :default false
+                              :as      "Enable or disable fail if results were found (useful for CI/CD)"}
                              {:option  "verbose" :short "v"
                               :type    :with-flag
                               :default true
