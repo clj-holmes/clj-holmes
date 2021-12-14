@@ -14,6 +14,7 @@
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
                         :informationUri "https://github.com/mthbernardes/clj-holmes"
+                        :version        (System/getProperty "clj-holmes.version")
                         :rules          (set (pmap result->sarif-rule results))}}}]})
 
 (defn ^:private result->sarif-result [{:keys [id message findings filename]}]

@@ -6,6 +6,7 @@
   (s/and string? (complement str/blank?)))
 
 (s/def :driver/name #{"clj-holmes"})
+(s/def :driver/version ::non-blank-string)
 (s/def :driver/informationUri #{"https://github.com/mthbernardes/clj-holmes"})
 
 (s/def ::text ::non-blank-string)
