@@ -31,7 +31,7 @@
         (rules.utils/filter-rules-by-location rule-severity [:severity]))))
 
 (defn init! [{:keys [rule-tags rule-severity rule-precision rules-directory]}]
-  (let [rules (read-rules rules-directory rule-tags rule-severity rule-precision)]
+  (let [rules (mapcat #(read-rules % rule-tags rule-severity rule-precision) rules-directory)]
     (->> rules
          (filter :valid?)
          (pmap rules.compose/compose-rule))))

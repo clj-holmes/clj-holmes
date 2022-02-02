@@ -39,7 +39,7 @@
                               :as      "Path to scan"}
                              {:option  "rules-directory" :short "d"
                               :type    :string
-                              :default "/tmp/clj-holmes-rules/"
+                              :multiple true
                               :as      "Directory to read rules"}
                              {:option  "output-file" :short "o"
                               :type    :string
