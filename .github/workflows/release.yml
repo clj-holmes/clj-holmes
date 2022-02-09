@@ -83,5 +83,3 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rancorzinho:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/rancorzinho:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/rancorzinho:buildcache,mode=max
