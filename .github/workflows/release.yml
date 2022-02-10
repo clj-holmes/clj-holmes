@@ -10,15 +10,12 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         gu-binary: [gu]
         include: 
           - os: ubuntu-latest
             native-image: native-image
             version: linux-amd64
-          - os: macos-latest
-            native-image: native-image
-            version: darwin-amd64
 
     runs-on: ${{ matrix.os }}
 
@@ -68,3 +65,18 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           files: clj-holmes-${{ matrix.os }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rancorzinho:latest
