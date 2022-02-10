@@ -10,15 +10,12 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         gu-binary: [gu]
         include: 
           - os: ubuntu-latest
             native-image: native-image
             version: linux-amd64
-          - os: macos-latest
-            native-image: native-image
-            version: darwin-amd64
 
     runs-on: ${{ matrix.os }}
 
