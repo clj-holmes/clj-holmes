@@ -18,7 +18,8 @@
         json-str (json/write-str json-result :value-fn (fn [key value]
                                                          (case key
                                                            :code (str value)
-                                                           :parent (subs (str value) 1)
+                                                           :parent (when value
+                                                                     (subs (str value) 1))
                                                            value)))]
     (spit output-file json-str)
     json-result))
