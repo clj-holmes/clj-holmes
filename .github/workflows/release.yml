@@ -1,6 +1,7 @@
 name: Release
 on:
   push:
+    branches: [main]
     paths: 
       - 'src/**'
       - 'project.clj'
