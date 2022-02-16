@@ -5,6 +5,7 @@ on:
     paths: 
       - 'src/**'
       - 'project.clj'
+      - 'Dockerfile'
       - '.github/workflows/release.yml'
 
 env:
