@@ -7,7 +7,7 @@ Download the release for your OS (mac or linux), copy it to a directory in your 
 
 ## Linux example
 ```
-curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes -o /tmp/clj-holmes
+curl -L https://github.com/clj-holmes/clj-holmes/releases/latest/download/clj-holmes-ubuntu-latest -o /tmp/clj-holmes
 sudo install -m 755 /tmp/clj-holmes /usr/local/bin/clj-holmes
 rm /tmp/clj-holmes
 ```
