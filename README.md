@@ -91,5 +91,5 @@ Steps necessary to build `clj-holmes`.
 ### Generate clj-holmes uberjar
 `lein uberjar`
 
-## Generate clj-holmes native binarty
+## Generate clj-holmes native binary
 `lein native -H:Name=clj-holmes`
