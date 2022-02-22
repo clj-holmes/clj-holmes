@@ -73,6 +73,10 @@ After fetching the rules, it is possible to execute a scan by providing the `-p`
 
 `clj-holmes scan -p /tmp/clojure-project`
 
+# Who uses it
+- [180˚ Seguros](https://www.180s.com.br/)
+- [Nubank](https://nubank.com.br/)
+
 # Build
 Steps necessary to build `clj-holmes`.
 ### Dependencies
