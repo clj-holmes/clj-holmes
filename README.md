@@ -72,3 +72,24 @@ OPTIONS:
 After fetching the rules, it is possible to execute a scan by providing the `-p` or `--scan-path` parameter followed by the path of the Clojure project to be scanned.
 
 `clj-holmes scan -p /tmp/clojure-project`
+
+# Build
+Steps necessary to build `clj-holmes`.
+### Dependencies
+- [graalvm](https://www.graalvm.org/java/quickstart/)
+- [lein](https://leiningen.org/)
+
+### Install native image
+`gu install native-image`
+
+### Download project dependencies
+`lein deps`
+
+### Clean target directory
+`lein clean`
+
+### Generate clj-holmes uberjar
+`lein uberjar`
+
+## Generate clj-holmes native binarty
+`lein native -H:Name=clj-holmes`
