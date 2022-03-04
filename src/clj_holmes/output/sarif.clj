@@ -12,7 +12,7 @@
     (merge rule sarif-rule)))
 
 (defn ^:private sarif-boilerplate [results]
-  {:$schema "https://www.schemastore.org/schemas/json/sarif-2.1.0-rtm.5.json"
+  {:$schema "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json"
    :version "2.1.0"
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
