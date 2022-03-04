@@ -10,7 +10,7 @@
 
 (defmethod output :sarif [results {:keys [output-file]}]
   (let [sarif-result (output.sarif/output results)]
-    (spit output-file (json/write-str sarif-result))
+    (spit output-file (json/write-str sarif-result :escape-slash false))
     sarif-result))
 
 (defmethod output :json [results {:keys [output-file]}]
