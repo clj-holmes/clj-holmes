@@ -1,5 +1,7 @@
 (ns clj-holmes.output.sarif)
 
+(def version (System/getProperty "clj-holmes.version"))
+
 (defn ^:private result->sarif-rule [{:keys [id name message severity] :as rule}]
   (let [rule (select-keys rule [:id :properties])
         sarif-rule {:name                 id
@@ -15,7 +17,7 @@
    :runs    [{:tool
               {:driver {:name           "clj-holmes"
                         :informationUri "https://github.com/clj-holmes/clj-holmes"
-                        :version        (nth (read-string (slurp "project.clj")) 2)
+                        :version        version
                         :rules          (set (pmap result->sarif-rule results))}}}]})
 
 (defn ^:private result->sarif-result [{:keys [id message findings filename]}]
