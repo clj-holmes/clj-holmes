@@ -7,7 +7,7 @@
 
 (s/def :driver/name #{"clj-holmes"})
 (s/def :driver/version ::non-blank-string)
-(s/def :driver/informationUri #{"https://github.com/mthbernardes/clj-holmes"})
+(s/def :driver/informationUri #{"https://github.com/clj-holmes/clj-holmes"})
 
 (s/def ::text ::non-blank-string)
 (s/def ::id ::non-blank-string)
@@ -62,7 +62,7 @@
                                  ::locations]))
 (s/def ::results (s/coll-of ::result))
 
-(s/def ::$schema #{"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Documents/CommitteeSpecifications/2.1.0/sarif-schema-2.1.0.json"})
+(s/def ::$schema #{"https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json"})
 (s/def ::version #{"2.1.0"})
 (s/def ::runs (s/coll-of (s/keys :req-un [::tool
                                           ::results])))
