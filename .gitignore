@@ -1,8 +1,9 @@
 .idea/
 .nrepl-port
 *.iml
-.lein-repl-history
 target/
 pom.xml
-.lein-failures
 reports/
+.clj-kondo/
+.cpcache/
+.lsp/

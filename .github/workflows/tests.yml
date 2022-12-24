@@ -1,4 +1,4 @@
-name: Run tests
+name: Clojure tests
 
 on: push
 
@@ -8,16 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: lein deps
+      - name: Prepare java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@10.1
+        with:
+          cli: 'latest'
 
       - name: Run lint
-        run: lein lint
-
+        run: clojure -M:clojure-lsp format --dry
+  
       - name: Run tests
-        run: lein test
+        run: clojure -M:test
 
-      - name: project.clj bump check
-        run: bash scripts/version-check.sh

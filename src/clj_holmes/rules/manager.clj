@@ -3,7 +3,7 @@
             [clojure.java.io :as io])
   (:import (java.net URI)))
 
-(defmulti ^:private fetch* (fn [^URI repository _] (keyword (.getScheme repository))))
+(defmulti ^:private fetch* (fn [^URI repository _] (-> repository (.getScheme) keyword)))
 
 (defmethod fetch* :git [repository output-directory]
   (println "Fetching rules from github")
