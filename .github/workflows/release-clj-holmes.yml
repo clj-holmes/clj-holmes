@@ -6,16 +6,16 @@ jobs:
   build: 
     strategy:
       matrix:
-        os: [ubuntu-latest] #, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         gu-binary: [gu]
         include:
           - os: ubuntu-latest
             native-image: native-image
             version: linux-amd64
 
-              #- os: macos-latest
-              #  native-image: native-image
-              #  version: darwin-amd64
+          - os: macos-latest
+            native-image: native-image
+            version: darwin-amd64
 
     runs-on: ${{ matrix.os }}
 
@@ -55,10 +55,30 @@ jobs:
         run: |
           native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
 
+      - uses: actions/upload-artifact@master
+        with:
+          name: clj-holmes-${{ matrix.os }}
+          path: . 
+
   release:
     needs: build 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Get version
+        run: | 
+          echo "APP_VERSION=$(cat VERSION.md)-beta" >> $GITHUB_ENV
+
+      - uses: actions/download-artifact@master
+        with:
+          name: clj-holmes-ubuntu-latest
+          path: .
+
+      - uses: actions/download-artifact@master
+        with:
+          name: clj-holmes-macos-latest
+          path: .
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -66,4 +86,6 @@ jobs:
           automatic_release_tag: ${{ env.APP_VERSION }}
           prerelease: true
           title: "Development Build"
-          files: clj-holmes-${{ matrix.os}}
+          files: | 
+            clj-holmes-ubuntu-latest
+            clj-holmes-macos-latest
