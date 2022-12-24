@@ -6,16 +6,16 @@ jobs:
   build: 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest] #, macos-latest]
         gu-binary: [gu]
         include:
           - os: ubuntu-latest
             native-image: native-image
             version: linux-amd64
 
-          - os: macos-latest
-            native-image: native-image
-            version: darwin-amd64
+              #- os: macos-latest
+              #  native-image: native-image
+              #  version: darwin-amd64
 
     runs-on: ${{ matrix.os }}
 
@@ -41,7 +41,7 @@ jobs:
         uses: DeLaGuardo/setup-graalvm@master
         id: setup-graalvm
         with:
-          graalvm-version: 21.3.0.java11
+          graalvm-version: 22.3.0.java11
 
       - name: Install native-image component
         run: |
@@ -53,10 +53,7 @@ jobs:
 
       - name: compile to binary
         run: |
-          native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time \
-          --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info \ 
-          --diagnostics-mode --report-unsupported-elements-at-runtime --verbose \ 
-          --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
+          native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
 
   release:
     needs: build 
