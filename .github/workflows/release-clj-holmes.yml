@@ -1,9 +1,9 @@
-name: 'release shape-shifter'
+name: release shape-shifter
 
 on: push
 
 jobs:
-  build: 
+  build-and-release: 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -51,14 +51,9 @@ jobs:
         run: |
           clojure -T:build org.corfield.build/uber :lib clj-holmes/clj-holmes :main clj-holmes.main
 
-          #      - name: compile to binary
-          #        run: |
-          #          native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
-
-      - uses: actions/upload-artifact@master
-        with:
-          name: clj-holmes-${{ matrix.os }}
-          path: . 
+      - name: compile to binary
+        run: |
+          native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -67,35 +62,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: | 
-            ./target/clj-holmes-standalone.jar
-            ./target/clj-holmes-standalone.jar
-
-#  release:
-#    needs: build 
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Get version
-#        run: | 
-#          echo "APP_VERSION=$(cat VERSION.md)-beta" >> $GITHUB_ENV
-#
-#      - uses: actions/download-artifact@master
-#        with:
-#          name: clj-holmes-ubuntu-latest
-#          path: .
-#
-#      - uses: actions/download-artifact@master
-#        with:
-#          name: clj-holmes-macos-latest
-#          path: .
-#
-#      - uses: "marvinpinto/action-automatic-releases@latest"
-#        with:
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          automatic_release_tag: ${{ env.APP_VERSION }}
-#          prerelease: true
-#          title: "Development Build"
-#          files: | 
-#            clj-holmes-ubuntu-latest
-#            clj-holmes-macos-latest
+            ./target/clj-holmes-${{ matrix.os }}
