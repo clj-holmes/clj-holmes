@@ -62,4 +62,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: | 
-            ./target/clj-holmes-${{ matrix.os }}
+            clj-holmes-${{ matrix.os }}
