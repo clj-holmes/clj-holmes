@@ -17,14 +17,14 @@ jobs:
             native-image: native-image
             version: darwin-amd64
 
-    runs-on: ${{ matix.os}}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Get version
         run: | 
-          echo "APP_VERSION=$(cat VERSION.md)" >> $GITHUB_ENV
+          echo "APP_VERSION=$(cat VERSION.md)-beta" >> $GITHUB_ENV
 
       - name: Prepare java
         uses: actions/setup-java@v3
@@ -58,15 +58,15 @@ jobs:
           --diagnostics-mode --report-unsupported-elements-at-runtime --verbose \ 
           --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
 
-#  release:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#
-#      - uses: "marvinpinto/action-automatic-releases@latest"
-#        with:
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          automatic_release_tag: ${{ env.APP_VERSION }}
-#          prerelease: true
-#          title: "Development Build"
+  release:
+    needs: build 
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.APP_VERSION }}
+          prerelease: true
+          title: "Development Build"
+          files: clj-holmes-${{ matrix.os}}
