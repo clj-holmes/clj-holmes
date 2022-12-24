@@ -35,7 +35,7 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@10.1
         with:
-          lein: latest
+          cli: latest
 
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
