@@ -25,7 +25,6 @@
 
 (defn scan [{:keys [verbose fail-on-result] :as opts}]
   (let [out (if verbose *out* (new StringWriter))]
-    (when verbose (progress/add-watch-to-counter))
     (binding [*out* out]
       (let [result (scan* opts)]
         (when fail-on-result
