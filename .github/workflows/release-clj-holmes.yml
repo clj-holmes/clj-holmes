@@ -1,0 +1,65 @@
+name: release shape-shifter
+
+on: push
+
+jobs:
+  build-and-release: 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        gu-binary: [gu]
+        include:
+          - os: ubuntu-latest
+            native-image: native-image
+            version: linux-amd64
+
+          - os: macos-latest
+            native-image: native-image
+            version: darwin-amd64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get version
+        run: | 
+          echo "APP_VERSION=$(cat VERSION.md)-beta" >> $GITHUB_ENV
+
+      - name: Prepare java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@10.1
+        with:
+          cli: latest
+
+      - name: Setup Graalvm
+        uses: DeLaGuardo/setup-graalvm@master
+        id: setup-graalvm
+        with:
+          graalvm-version: 22.3.0.java11
+
+      - name: Install native-image component
+        run: |
+          ${{ matrix.gu-binary }} install native-image
+
+      - name: build jar 
+        run: |
+          clojure -T:build org.corfield.build/uber :lib clj-holmes/clj-holmes :main clj-holmes.main
+
+      - name: compile to binary
+        run: |
+          native-image -jar ./target/clj-holmes-standalone.jar --initialize-at-build-time --no-fallback -Dclj-holmes.version=${{ env.APP_VERSION }} --native-image-info --diagnostics-mode --report-unsupported-elements-at-runtime --verbose --allow-incomplete-classpath -H:Name=clj-holmes-${{ matrix.os }}
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.APP_VERSION }}
+          prerelease: true
+          title: "Development Build"
+          files: | 
+            clj-holmes-${{ matrix.os }}

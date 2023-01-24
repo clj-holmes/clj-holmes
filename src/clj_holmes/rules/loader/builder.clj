@@ -1,7 +1,8 @@
 (ns clj-holmes.rules.loader.builder
   (:require [clj-holmes.rules.loader.utils :as utils]
             [clojure.spec.alpha :as s]
-            [shape-shifter.core :refer [*config* *wildcards* pattern->spec]]))
+            [shape-shifter.config :refer [*config* *wildcards*]]
+            [shape-shifter.core :refer [pattern->spec]]))
 
 (defn ^:private build-custom-function
   "Builds a function that will check for the presence of a pattern using a shape-shifter $custom-function wildcard."
