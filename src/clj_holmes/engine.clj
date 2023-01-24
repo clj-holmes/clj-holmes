@@ -9,7 +9,7 @@
   (let [result (->> rules
                     (pmap #(rules.processor/init! code-structure %))
                     (filterv :result))]
-    
+
     result))
 
 (defn scan* [opts]
